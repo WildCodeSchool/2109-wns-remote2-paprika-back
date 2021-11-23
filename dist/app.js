@@ -1,4 +1,5 @@
 "use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 require("reflect-metadata");
@@ -29,4 +30,5 @@ const resolvers = {
 const server = new apollo_server_1.ApolloServer({ typeDefs, resolvers });
 // Start Server
 server.listen(4000, () => console.log('Server started on 4000'));
+
 //# sourceMappingURL=app.js.map
