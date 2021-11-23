@@ -1,6 +1,8 @@
 import { ApolloServer, gql } from 'apollo-server';
 import 'reflect-metadata';
 
+require('dotenv').config();
+
 // Test values
 const typeDefs = gql`
   type Book {
