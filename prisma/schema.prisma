@@ -6,6 +6,117 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum RoleSite {
+  ADMIN
+  USER
+  PO
+
+  @@map("role_site")
+}
+
+enum Status {
+  OPEN
+  INPROGRESS
+  DONE
+
+  @@map("status")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+
+  @@map("priority")
+}
+
+model User {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now()) @map("created_at")
+  email     String        @unique
+  firstName String        @map("first_name")
+  lastName  String        @map("last_name")
+  avatar    String?
+  password  String
+  role      RoleSite      @default(USER)
+  tasks     Task[]
+  comments  Comment[]
+  projects  UserProject[]
+
+  @@map("user")
+}
+
+model Project {
+  id           Int           @id @default(autoincrement())
+  startAt      DateTime      @default(now()) @map("start_at")
+  EndAt        DateTime?     @map("end_at")
+  name         String
+  client       String
+  description  String        @db.Text
+  timing       String
+  tasks        Task[]
+  documents    Document[]
+  participants UserProject[]
+
+  @@map("project")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String    @db.Text
+  timing      String
+  status      Status
+  priority    Priority
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId   Int       @map("project_id")
+  users       User[]
+  comments    Comment[]
+
+  @@map("task")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @map("user_id")
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    Int      @map("task_id")
+
+  @@map("comment")
+}
+
+model Document {
+  id        Int     @id @default(autoincrement())
+  name      String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int     @map("project_id")
+
+  @@map("document")
+}
+
+model ProjectRole {
+  id            Int           @id @default(autoincrement())
+  name          String
+  roleOnProject UserProject[]
+
+  @@map("project_role")
+}
+
+model UserProject {
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int         @map("user_id")
+  project       Project     @relation(fields: [projectId], references: [id])
+  projectId     Int         @map("project_id")
+  projectRole   ProjectRole @relation(fields: [projectRoleId], references: [id])
+  projectRoleId Int         @map("project_role_id")
+
+  @@id([userId, projectId])
+  @@map("role_on_project")
 }
