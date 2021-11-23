@@ -18,5 +18,5 @@ npx prisma migrate dev
 
 create a migration
 ```zsh
-npx prisma migrate dev --name [name of yout migation]
+npx prisma migrate dev --name [name of yout migration]
 ```
