@@ -2,10 +2,10 @@ const { buildSchema } = require('graphql');
 
 const projectSchema = buildSchema(`
     type Query {
-        project(id: Int!): Project
+        getAllProjects: [Project!]
     },
     type Mutation{
-        addProject{
+        createProject{
             id: Int
             startAt: DateTime
             endAt: DateTime
