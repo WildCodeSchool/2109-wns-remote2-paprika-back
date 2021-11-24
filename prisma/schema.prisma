@@ -35,17 +35,19 @@ enum Priority {
 }
 
 model User {
-  id        Int           @id @default(autoincrement())
-  createdAt DateTime      @default(now()) @map("created_at")
-  email     String        @unique
-  firstName String        @map("first_name")
-  lastName  String        @map("last_name")
-  avatar    String?
-  password  String
-  role      RoleSite      @default(USER)
-  tasks     Task[]
-  comments  Comment[]
-  projects  UserProject[]
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now()) @map("created_at")
+  email       String        @unique
+  firstName   String        @map("first_name")
+  lastName    String        @map("last_name")
+  avatar      String?
+  password    String
+  work        String?
+  description String?
+  role        RoleSite      @default(USER)
+  tasks       Task[]
+  comments    Comment[]
+  projects    UserProject[]
 
   @@map("user")
 }
@@ -57,7 +59,7 @@ model Project {
   name         String
   client       String
   description  String        @db.Text
-  timing       String
+  timing       String?
   tasks        Task[]
   documents    Document[]
   participants UserProject[]
@@ -69,9 +71,9 @@ model Task {
   id          Int       @id @default(autoincrement())
   name        String
   description String    @db.Text
-  timing      String
-  status      Status
-  priority    Priority
+  timing      String?
+  status      Status?   @default(OPEN)
+  priority    Priority? @default(LOW)
   project     Project   @relation(fields: [projectId], references: [id])
   projectId   Int       @map("project_id")
   users       User[]

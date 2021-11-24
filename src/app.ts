@@ -1,37 +1,26 @@
-import { ApolloServer, gql } from 'apollo-server';
-import 'reflect-metadata';
+import { PrismaClient } from '@prisma/client';
+import { ApolloServer } from 'apollo-server';
+import resolvers from './graphql/resolvers/resolvers';
+import typeDefs from './graphql/schemas/typeDefs';
 
 require('dotenv').config();
 
-// Test values
-const typeDefs = gql`
-  type Book {
-    title: String
-    author: String
-  }
-  type Query {
-    books: [Book]
-  }
-`;
+const runServer = () => {
+  const prisma = new PrismaClient();
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin'
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster'
-  }
-];
+  const server = new ApolloServer({
+    resolvers,
+    typeDefs,
+    context: () => ({
+      prisma
+    })
+  });
 
-const resolvers = {
-  Query: {
-    books: () => books
-  }
+  server.listen(4000, () => {
+    console.log(
+      `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+    );
+  });
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-// Start Server
-server.listen(4000, () => console.log('Server started on 4000'));
+runServer();
