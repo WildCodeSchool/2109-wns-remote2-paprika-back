@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 require("reflect-metadata");
+require('dotenv').config();
 // Test values
 const typeDefs = (0, apollo_server_1.gql) `
   type Book {
