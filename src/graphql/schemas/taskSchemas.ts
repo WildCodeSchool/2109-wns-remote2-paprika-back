@@ -6,8 +6,9 @@ export default gql`
     getTask(taskId: String!): Task!
   }
   type Mutation {
-    createTask(TaskInput: TaskInput!): Task!
+    createTask(taskInput: TaskInput!): Task!
     deleteTask(taskId: String!): Boolean
+    updateTask(taskId: String!, updateTaskInput: UpdateTaskInput!): Task!
   }
 
   type Task {
@@ -24,6 +25,15 @@ export default gql`
     name: String!
     description: String!
     projectId: Int!
+  }
+
+  input UpdateTaskInput {
+    name: String
+    description: String
+    projectId: Int
+    status: Status
+    priority: Priority
+    timing: String
   }
 
   enum Status {

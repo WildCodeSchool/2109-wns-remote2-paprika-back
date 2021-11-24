@@ -17,18 +17,25 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createTask?: Maybe<Task>;
+  createTask: Task;
   deleteTask?: Maybe<Scalars['Boolean']>;
+  updateTask: Task;
 };
 
 
 export type MutationCreateTaskArgs = {
-  TaskInput: TaskInput;
+  taskInput: TaskInput;
 };
 
 
 export type MutationDeleteTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type MutationUpdateTaskArgs = {
+  taskId: Scalars['String'];
+  updateTaskInput: UpdateTaskInput;
 };
 
 export enum Priority {
@@ -39,7 +46,13 @@ export enum Priority {
 
 export type Query = {
   __typename?: 'Query';
-  getAllTasks?: Maybe<Array<Maybe<Task>>>;
+  getAllTasks: Array<Task>;
+  getTask: Task;
+};
+
+
+export type QueryGetTaskArgs = {
+  taskId: Scalars['String'];
 };
 
 export enum Status {
@@ -63,6 +76,15 @@ export type TaskInput = {
   description: Scalars['String'];
   name: Scalars['String'];
   projectId: Scalars['Int'];
+};
+
+export type UpdateTaskInput = {
+  description?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  priority?: InputMaybe<Priority>;
+  projectId?: InputMaybe<Scalars['Int']>;
+  status?: InputMaybe<Status>;
+  timing?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -144,6 +166,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   TaskInput: TaskInput;
+  UpdateTaskInput: UpdateTaskInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -156,15 +179,18 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Task: Task;
   TaskInput: TaskInput;
+  UpdateTaskInput: UpdateTaskInput;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'TaskInput'>>;
+  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'taskId' | 'updateTaskInput'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAllTasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
+  getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {

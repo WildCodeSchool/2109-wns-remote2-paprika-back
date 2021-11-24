@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { TaskInput } from '../types';
+import { TaskInput, UpdateTaskInput } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,15 @@ export default {
     getAllTasks: async () => {
       const tasks = await prisma.task.findMany();
       return tasks;
-    }
+    },
+    getTask: async ({taskId} : {taskId: number}) => {
+      const task = await prisma.task.findUnique({
+        where:{
+          id: taskId
+        }
+      })
+      return task;
+    },
   },
 
   Mutation: {
@@ -27,6 +35,19 @@ export default {
           id: taskId
         }
       });
+    },
+    updateTask: async ({taskId, input} : {taskId: number, input: UpdateTaskInput}) => {
+      const task = await prisma.task.update({
+        where:{
+          id: taskId
+        },
+        data: {
+          status: input.status,
+          priority: input.priority,
+          timing: input.timing
+        }
+      })
     }
+
   }
 };
