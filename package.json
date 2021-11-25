@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/app.js",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "start": "tsc && nodemon dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "db:migration": "npx prisma migrate dev",
+    "db:seed": "npx prisma db seed",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "keywords": [],
@@ -29,6 +33,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^4.0.0",
+    "faker": "^5.5.3",
     "nodemon": "^2.0.15",
     "prettier": "2.4.1",
     "prisma": "^3.5.0",
@@ -36,6 +41,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.5.0",
+    "@types/faker": "^5.5.9",
     "apollo-server": "^3.5.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
