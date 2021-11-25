@@ -34,7 +34,6 @@ export type MutationDeleteTaskArgs = {
 
 
 export type MutationUpdateTaskArgs = {
-  taskId: Scalars['String'];
   updateTaskInput: UpdateTaskInput;
 };
 
@@ -75,15 +74,16 @@ export type Task = {
 export type TaskInput = {
   description: Scalars['String'];
   name: Scalars['String'];
-  projectId: Scalars['Int'];
+  projectId: Scalars['String'];
 };
 
 export type UpdateTaskInput = {
   description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   priority?: InputMaybe<Priority>;
-  projectId?: InputMaybe<Scalars['Int']>;
+  projectId?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Status>;
+  taskId: Scalars['String'];
   timing?: InputMaybe<Scalars['String']>;
 };
 
@@ -158,7 +158,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
   Query: ResolverTypeWrapper<{}>;
@@ -173,7 +172,6 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   ID: Scalars['ID'];
-  Int: Scalars['Int'];
   Mutation: {};
   Query: {};
   String: Scalars['String'];
@@ -185,7 +183,7 @@ export type ResolversParentTypes = {
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
-  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'taskId' | 'updateTaskInput'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
