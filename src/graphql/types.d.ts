@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -13,13 +13,23 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Date custom scalar type */
+  Date: any;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createProject: Project;
   createTask: Task;
+  deleteProject?: Maybe<Scalars['Boolean']>;
   deleteTask?: Maybe<Scalars['Boolean']>;
+  updateProject: Project;
   updateTask: Task;
+};
+
+
+export type MutationCreateProjectArgs = {
+  projectInput: ProjectInput;
 };
 
 
@@ -28,8 +38,19 @@ export type MutationCreateTaskArgs = {
 };
 
 
+export type MutationDeleteProjectArgs = {
+  projectId: Scalars['String'];
+};
+
+
 export type MutationDeleteTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type MutationUpdateProjectArgs = {
+  projectId: Scalars['String'];
+  updateProjectInput: UpdateProjectInput;
 };
 
 
@@ -43,10 +64,33 @@ export enum Priority {
   Medium = 'MEDIUM'
 }
 
+export type Project = {
+  __typename?: 'Project';
+  client: Scalars['String'];
+  description: Scalars['String'];
+  endAt?: Maybe<Scalars['Date']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  startAt?: Maybe<Scalars['Date']>;
+};
+
+export type ProjectInput = {
+  client: Scalars['String'];
+  description: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  getAllProjects: Array<Project>;
   getAllTasks: Array<Task>;
+  getProject: Project;
   getTask: Task;
+};
+
+
+export type QueryGetProjectArgs = {
+  projectId: Scalars['String'];
 };
 
 
@@ -75,6 +119,14 @@ export type TaskInput = {
   description: Scalars['String'];
   name: Scalars['String'];
   projectId: Scalars['String'];
+};
+
+export type UpdateProjectInput = {
+  client?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  endAt?: InputMaybe<Scalars['Date']>;
+  name?: InputMaybe<Scalars['String']>;
+  startAt?: InputMaybe<Scalars['Date']>;
 };
 
 export type UpdateTaskInput = {
@@ -157,37 +209,64 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
+  Project: ResolverTypeWrapper<Project>;
+  ProjectInput: ProjectInput;
   Query: ResolverTypeWrapper<{}>;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   TaskInput: TaskInput;
+  UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Date: Scalars['Date'];
   ID: Scalars['ID'];
   Mutation: {};
+  Project: Project;
+  ProjectInput: ProjectInput;
   Query: {};
   String: Scalars['String'];
   Task: Task;
   TaskInput: TaskInput;
+  UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
 };
 
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
+  deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'projectId' | 'updateProjectInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
 };
 
+export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
+  client?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  endAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  startAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
 };
 
@@ -203,7 +282,9 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
+  Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
 };

@@ -55,11 +55,10 @@ model User {
 model Project {
   id           String        @id @default(uuid())
   startAt      DateTime      @default(now()) @map("start_at")
-  EndAt        DateTime?     @map("end_at")
+  endAt        DateTime?     @map("end_at")
   name         String
   client       String
   description  String        @db.Text
-  timing       String?
   tasks        Task[]
   documents    Document[]
   participants UserProject[]
