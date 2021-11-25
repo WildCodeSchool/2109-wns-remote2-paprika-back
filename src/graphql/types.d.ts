@@ -48,7 +48,6 @@ export type MutationDeleteTaskArgs = {
 
 
 export type MutationUpdateTaskArgs = {
-  taskId: Scalars['String'];
   updateTaskInput: UpdateTaskInput;
 };
 
@@ -120,7 +119,7 @@ export type Task = {
 export type TaskInput = {
   description: Scalars['String'];
   name: Scalars['String'];
-  projectId: Scalars['Int'];
+  projectId: Scalars['String'];
 };
 
 export type UpdateProjectInput = {
@@ -136,8 +135,9 @@ export type UpdateTaskInput = {
   description?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   priority?: InputMaybe<Priority>;
-  projectId?: InputMaybe<Scalars['Int']>;
+  projectId?: InputMaybe<Scalars['String']>;
   status?: InputMaybe<Status>;
+  taskId: Scalars['String'];
   timing?: InputMaybe<Scalars['String']>;
 };
 
@@ -253,7 +253,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
-  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'taskId' | 'updateTaskInput'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
   updateproject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateprojectArgs, 'projectId' | 'updateProjectInput'>>;
 };
 
