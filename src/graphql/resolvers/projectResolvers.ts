@@ -28,7 +28,7 @@ export default {
       const projects = await prisma.project.findMany();
       return projects;
     },
-    getTask: async ({ projectId }: { projectId: number }) => {
+    getTask: async ({ projectId }: { projectId: string }) => {
       const project = await prisma.project.findUnique({
         where: {
           id: projectId
@@ -48,7 +48,7 @@ export default {
         }
       });
     },
-    deleteProject: async ({ projectId }: { projectId: number }) => {
+    deleteProject: async ({ projectId }: { projectId: string }) => {
       return await prisma.project.delete({
         where: {
           id: projectId
@@ -59,7 +59,7 @@ export default {
       projectId,
       input
     }: {
-      projectId: number;
+      projectId: string;
       input: UpdateProjectInput;
     }) => {
       return await prisma.project.update({
@@ -69,9 +69,9 @@ export default {
         data: {
           startAt: input.startAt,
           endAt: input.endAt,
-          name: input.name,
-          client: input.client,
-          description: input.description,
+          name: input.name  || undefined,
+          client: input.client  || undefined,
+          description: input.description  || undefined,
         }
       });
     }

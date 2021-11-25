@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Date custom scalar type */
   Date: any;
 };
 
@@ -22,8 +23,8 @@ export type Mutation = {
   createTask: Task;
   deleteProject?: Maybe<Scalars['Boolean']>;
   deleteTask?: Maybe<Scalars['Boolean']>;
+  updateProject: Project;
   updateTask: Task;
-  updateproject: Project;
 };
 
 
@@ -38,7 +39,7 @@ export type MutationCreateTaskArgs = {
 
 
 export type MutationDeleteProjectArgs = {
-  projectId: Scalars['Int'];
+  projectId: Scalars['String'];
 };
 
 
@@ -47,14 +48,14 @@ export type MutationDeleteTaskArgs = {
 };
 
 
-export type MutationUpdateTaskArgs = {
-  updateTaskInput: UpdateTaskInput;
+export type MutationUpdateProjectArgs = {
+  projectId: Scalars['String'];
+  updateProjectInput: UpdateProjectInput;
 };
 
 
-export type MutationUpdateprojectArgs = {
-  projectId: Scalars['Int'];
-  updateProjectInput: UpdateProjectInput;
+export type MutationUpdateTaskArgs = {
+  updateTaskInput: UpdateTaskInput;
 };
 
 export enum Priority {
@@ -68,17 +69,15 @@ export type Project = {
   client: Scalars['String'];
   description: Scalars['String'];
   endAt?: Maybe<Scalars['Date']>;
-  id: Scalars['Int'];
+  id: Scalars['ID'];
   name: Scalars['String'];
   startAt?: Maybe<Scalars['Date']>;
-  timing?: Maybe<Scalars['String']>;
 };
 
 export type ProjectInput = {
   client: Scalars['String'];
   description: Scalars['String'];
   name: Scalars['String'];
-  timing?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -91,7 +90,7 @@ export type Query = {
 
 
 export type QueryGetProjectArgs = {
-  projectId: Scalars['Int'];
+  projectId: Scalars['String'];
 };
 
 
@@ -128,7 +127,6 @@ export type UpdateProjectInput = {
   endAt?: InputMaybe<Scalars['Date']>;
   name?: InputMaybe<Scalars['String']>;
   startAt?: InputMaybe<Scalars['Date']>;
-  timing?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateTaskInput = {
@@ -213,7 +211,6 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
   Project: ResolverTypeWrapper<Project>;
@@ -232,7 +229,6 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Date: Scalars['Date'];
   ID: Scalars['ID'];
-  Int: Scalars['Int'];
   Mutation: {};
   Project: Project;
   ProjectInput: ProjectInput;
@@ -253,18 +249,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'projectId' | 'updateProjectInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
-  updateproject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateprojectArgs, 'projectId' | 'updateProjectInput'>>;
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
   client?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   endAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   startAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  timing?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

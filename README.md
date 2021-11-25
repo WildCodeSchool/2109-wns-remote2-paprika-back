@@ -11,7 +11,7 @@ npm i
 ```
 
 ## Database
-run to apply migrations (npm db:migration)
+run to apply migrations (npm run db:migration)
 ```zsh
 npx prisma migrate dev
 ```
