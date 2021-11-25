@@ -8,7 +8,7 @@ export default gql`
   type Mutation {
     createTask(taskInput: TaskInput!): Task!
     deleteTask(taskId: String!): Boolean
-    updateTask(taskId: String!, updateTaskInput: UpdateTaskInput!): Task!
+    updateTask(updateTaskInput: UpdateTaskInput!): Task!
   }
 
   type Task {
@@ -24,13 +24,14 @@ export default gql`
   input TaskInput {
     name: String!
     description: String!
-    projectId: Int!
+    projectId: String!
   }
 
   input UpdateTaskInput {
+    taskId: String!
     name: String
     description: String
-    projectId: Int
+    projectId: String
     status: Status
     priority: Priority
     timing: String
