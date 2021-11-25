@@ -1,35 +1,45 @@
-const { buildSchema } = require('graphql');
+import { gql } from 'apollo-server';
 
-const projectSchema = buildSchema(`
-    type Query {
-        getAllProjects: [Project!]
-    },
-    type Mutation{
-        createProject{
-            id: Int
-            startAt: DateTime
-            endAt: DateTime
-            name: String
-            client: String
-            description: String
-            timing: String
-            tasks: [Task!]
-            documents: [Documents!]
-            participants: [UserProject!]
-        }
-    },
-    type Project{
-        id: Int
-        startAt: DateTime
-        endAt: DateTime
-        name: String
-        client: String
-        description: String
-        timing: String
-        tasks: [Task!]
-        documents: [Documents!]
-        participants: [UserProject!]
-    }
-`);
+export default gql`
+  scalar Date
 
-module.exports = { projectSchema };
+  type Query {
+    getAllProjects: [Project!]!
+    getProject(projectId: Int!): Project!
+  }
+
+  type Mutation {
+    createProject(projectInput: ProjectInput!): Project!
+    deleteProject(projectId: Int!): Boolean
+    updateproject(
+      projectId: Int!
+      updateProjectInput: UpdateProjectInput!
+    ): Project!
+  }
+
+  type Project {
+    id: Int!
+    startAt: Date
+    endAt: Date
+    name: String!
+    client: String!
+    description: String!
+    timing: String
+  }
+
+  input ProjectInput {
+    name: String!
+    client: String!
+    description: String!
+    timing: String
+  }
+
+  input UpdateProjectInput {
+    startAt: Date
+    endAt: Date
+    name: String
+    client: String
+    description: String
+    timing: String
+  }
+`;

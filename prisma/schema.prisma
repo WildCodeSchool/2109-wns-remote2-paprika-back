@@ -59,7 +59,6 @@ model Project {
   name         String
   client       String
   description  String        @db.Text
-  timing       String?
   tasks        Task[]
   documents    Document[]
   participants UserProject[]
