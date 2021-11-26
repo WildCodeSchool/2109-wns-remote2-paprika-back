@@ -1,6 +1,7 @@
 import taskResolvers from './taskResolver';
 import userResolver from './userResolver';
+import projectResolvers from './projectResolvers';
 
-const resolvers = [taskResolvers, userResolver];
+const resolvers = [taskResolvers, projectResolvers, userResolver];
 
 export default resolvers;
