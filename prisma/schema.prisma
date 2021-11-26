@@ -35,29 +35,30 @@ enum Priority {
 }
 
 model User {
-  id        Int           @id @default(autoincrement())
-  createdAt DateTime      @default(now()) @map("created_at")
-  email     String        @unique
-  firstName String        @map("first_name")
-  lastName  String        @map("last_name")
-  avatar    String?
-  password  String
-  role      RoleSite      @default(USER)
-  tasks     Task[]
-  comments  Comment[]
-  projects  UserProject[]
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now()) @map("created_at")
+  email       String        @unique
+  firstName   String        @map("first_name")
+  lastName    String        @map("last_name")
+  avatar      String?
+  password    String
+  work        String?
+  description String?
+  role        RoleSite      @default(USER)
+  tasks       Task[]
+  comments    Comment[]
+  projects    UserProject[]
 
   @@map("user")
 }
 
 model Project {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(uuid())
   startAt      DateTime      @default(now()) @map("start_at")
-  EndAt        DateTime?     @map("end_at")
+  endAt        DateTime?     @map("end_at")
   name         String
   client       String
   description  String        @db.Text
-  timing       String
   tasks        Task[]
   documents    Document[]
   participants UserProject[]
@@ -66,14 +67,14 @@ model Project {
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   name        String
   description String    @db.Text
-  timing      String
-  status      Status
-  priority    Priority
+  timing      String?
+  status      Status?   @default(OPEN)
+  priority    Priority? @default(LOW)
   project     Project   @relation(fields: [projectId], references: [id])
-  projectId   Int       @map("project_id")
+  projectId   String    @map("project_id")
   users       User[]
   comments    Comment[]
 
@@ -81,28 +82,28 @@ model Task {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   content   String   @db.Text
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @map("user_id")
+  userId    String   @map("user_id")
   task      Task     @relation(fields: [taskId], references: [id])
-  taskId    Int      @map("task_id")
+  taskId    String   @map("task_id")
 
   @@map("comment")
 }
 
 model Document {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(uuid())
   name      String
   project   Project @relation(fields: [projectId], references: [id])
-  projectId Int     @map("project_id")
+  projectId String  @map("project_id")
 
   @@map("document")
 }
 
 model ProjectRole {
-  id            Int           @id @default(autoincrement())
+  id            String        @id @default(uuid())
   name          String
   roleOnProject UserProject[]
 
@@ -111,11 +112,11 @@ model ProjectRole {
 
 model UserProject {
   user          User        @relation(fields: [userId], references: [id])
-  userId        Int         @map("user_id")
+  userId        String         @map("user_id")
   project       Project     @relation(fields: [projectId], references: [id])
-  projectId     Int         @map("project_id")
+  projectId     String         @map("project_id")
   projectRole   ProjectRole @relation(fields: [projectRoleId], references: [id])
-  projectRoleId Int         @map("project_role_id")
+  projectRoleId String         @map("project_role_id")
 
   @@id([userId, projectId])
   @@map("role_on_project")

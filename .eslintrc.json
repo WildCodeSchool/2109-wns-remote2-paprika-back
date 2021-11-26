@@ -14,5 +14,12 @@
     "prettier/prettier": "error",
     "no-console": "off",
     "linebreak-style": 0
-  }
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
 }
