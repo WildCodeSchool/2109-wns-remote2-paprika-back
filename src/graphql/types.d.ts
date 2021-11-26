@@ -13,8 +13,18 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
   Date: any;
+};
+
+export type LoginResponse = {
+  __typename?: 'LoginResponse';
+  token?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+};
+
+export type LoginUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {
@@ -23,8 +33,12 @@ export type Mutation = {
   createTask: Task;
   deleteProject?: Maybe<Scalars['Boolean']>;
   deleteTask?: Maybe<Scalars['Boolean']>;
+  deleteUser?: Maybe<Scalars['Boolean']>;
+  login: LoginResponse;
+  register: User;
   updateProject: Project;
   updateTask: Task;
+  updateUser: User;
 };
 
 
@@ -48,6 +62,21 @@ export type MutationDeleteTaskArgs = {
 };
 
 
+export type MutationDeleteUserArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  loginUserInput: LoginUserInput;
+};
+
+
+export type MutationRegisterArgs = {
+  userInput: UserInput;
+};
+
+
 export type MutationUpdateProjectArgs = {
   projectId: Scalars['String'];
   updateProjectInput: UpdateProjectInput;
@@ -56,6 +85,11 @@ export type MutationUpdateProjectArgs = {
 
 export type MutationUpdateTaskArgs = {
   updateTaskInput: UpdateTaskInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput;
 };
 
 export enum Priority {
@@ -84,8 +118,10 @@ export type Query = {
   __typename?: 'Query';
   getAllProjects: Array<Project>;
   getAllTasks: Array<Task>;
+  getAllUsers: Array<User>;
   getProject: Project;
   getTask: Task;
+  getUser: User;
 };
 
 
@@ -97,6 +133,17 @@ export type QueryGetProjectArgs = {
 export type QueryGetTaskArgs = {
   taskId: Scalars['String'];
 };
+
+
+export type QueryGetUserArgs = {
+  userId: Scalars['String'];
+};
+
+export enum RoleSite {
+  Admin = 'ADMIN',
+  Po = 'PO',
+  User = 'USER'
+}
 
 export enum Status {
   Done = 'DONE',
@@ -137,6 +184,29 @@ export type UpdateTaskInput = {
   status?: InputMaybe<Status>;
   taskId: Scalars['String'];
   timing?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateUserInput = {
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<RoleSite>;
+  userId: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  id: Scalars['ID'];
+  lastName: Scalars['String'];
+  role?: Maybe<RoleSite>;
+};
+
+export type UserInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -211,17 +281,23 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  LoginResponse: ResolverTypeWrapper<LoginResponse>;
+  LoginUserInput: LoginUserInput;
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
   Project: ResolverTypeWrapper<Project>;
   ProjectInput: ProjectInput;
   Query: ResolverTypeWrapper<{}>;
+  RoleSite: RoleSite;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   TaskInput: TaskInput;
   UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
+  User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -229,6 +305,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Date: Scalars['Date'];
   ID: Scalars['ID'];
+  LoginResponse: LoginResponse;
+  LoginUserInput: LoginUserInput;
   Mutation: {};
   Project: Project;
   ProjectInput: ProjectInput;
@@ -238,19 +316,32 @@ export type ResolversParentTypes = {
   TaskInput: TaskInput;
   UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
+  User: User;
+  UserInput: UserInput;
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
 
+export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
+  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'loginUserInput'>>;
+  register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'userInput'>>;
   updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'projectId' | 'updateProjectInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
+  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'updateUserInput'>>;
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
@@ -266,8 +357,10 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
+  getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
@@ -281,11 +374,22 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['RoleSite']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
+  LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 
