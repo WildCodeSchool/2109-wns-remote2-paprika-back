@@ -13,7 +13,16 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Date custom scalar type */
   Date: any;
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  content: Scalars['String'];
+  id: Scalars['ID'];
+  taskId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type LoginResponse = {
@@ -119,9 +128,15 @@ export type Query = {
   getAllProjects: Array<Project>;
   getAllTasks: Array<Task>;
   getAllUsers: Array<User>;
+  getCommentsByTask: Array<Comment>;
   getProject: Project;
   getTask: Task;
   getUser: User;
+};
+
+
+export type QueryGetCommentsByTaskArgs = {
+  taskId: Scalars['String'];
 };
 
 
@@ -279,6 +294,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Comment: ResolverTypeWrapper<Comment>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
@@ -303,6 +319,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Comment: Comment;
   Date: Scalars['Date'];
   ID: Scalars['ID'];
   LoginResponse: LoginResponse;
@@ -319,6 +336,14 @@ export type ResolversParentTypes = {
   UpdateUserInput: UpdateUserInput;
   User: User;
   UserInput: UserInput;
+};
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  taskId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
@@ -358,6 +383,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  getCommentsByTask?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
   getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
@@ -384,6 +410,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
