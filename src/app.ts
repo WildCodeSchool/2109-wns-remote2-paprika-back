@@ -11,9 +11,11 @@ const runServer = () => {
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    context: () => ({
-      prisma
-    })
+    context: () => {
+      return {
+        prisma
+      };
+    }
   });
 
   server.listen(4000, () => {

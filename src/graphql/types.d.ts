@@ -30,9 +30,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTask: Task;
   deleteTask?: Maybe<Scalars['Boolean']>;
+  deleteUser?: Maybe<Scalars['Boolean']>;
   login: LoginResponse;
   register: User;
   updateTask: Task;
+  updateUser: User;
 };
 
 
@@ -43,6 +45,11 @@ export type MutationCreateTaskArgs = {
 
 export type MutationDeleteTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -60,6 +67,11 @@ export type MutationUpdateTaskArgs = {
   updateTaskInput: UpdateTaskInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput;
+};
+
 export enum Priority {
   High = 'HIGH',
   Low = 'LOW',
@@ -68,7 +80,6 @@ export enum Priority {
 
 export type Query = {
   __typename?: 'Query';
-  currentUser: User;
   getAllTasks: Array<Task>;
   getAllUsers: Array<User>;
   getTask: Task;
@@ -84,6 +95,12 @@ export type QueryGetTaskArgs = {
 export type QueryGetUserArgs = {
   userId: Scalars['String'];
 };
+
+export enum RoleSite {
+  Admin = 'ADMIN',
+  Po = 'PO',
+  User = 'USER'
+}
 
 export enum Status {
   Done = 'DONE',
@@ -118,12 +135,20 @@ export type UpdateTaskInput = {
   timing?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserInput = {
+  firstName?: InputMaybe<Scalars['String']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<RoleSite>;
+  userId: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
   lastName: Scalars['String'];
+  role?: Maybe<RoleSite>;
 };
 
 export type UserInput = {
@@ -209,11 +234,13 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
   Query: ResolverTypeWrapper<{}>;
+  RoleSite: RoleSite;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   TaskInput: TaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
 };
@@ -230,6 +257,7 @@ export type ResolversParentTypes = {
   Task: Task;
   TaskInput: TaskInput;
   UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
   User: User;
   UserInput: UserInput;
 };
@@ -243,13 +271,14 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'loginUserInput'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'userInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
+  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'updateUserInput'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  currentUser?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
@@ -272,6 +301,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['RoleSite']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

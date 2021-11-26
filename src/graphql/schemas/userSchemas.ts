@@ -2,7 +2,6 @@ import { gql } from 'apollo-server';
 
 export default gql`    
     type Query {
-        currentUser: User!
         getAllUsers: [User!]!
         getUser(userId: String!): User!
     }
@@ -10,6 +9,8 @@ export default gql`
     type Mutation {
         register(userInput: UserInput!): User!
         login(loginUserInput: LoginUserInput!): LoginResponse!
+        deleteUser(userId: String!): Boolean
+        updateUser(updateUserInput: UpdateUserInput!): User!
     }
 
     type User {
@@ -17,6 +18,7 @@ export default gql`
         email: String!
         lastName: String!
         firstName: String!
+        role: RoleSite
     }
 
     type LoginResponse{
@@ -34,5 +36,18 @@ export default gql`
     input LoginUserInput {
         email: String!
         password: String!
+    }
+
+    input UpdateUserInput {
+    userId: String!
+    lastName: String
+    firstName: String
+    role: RoleSite
+    }
+
+    enum RoleSite {
+        ADMIN
+        USER
+        PO
     }
 `

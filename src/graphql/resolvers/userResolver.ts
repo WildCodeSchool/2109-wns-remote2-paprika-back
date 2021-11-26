@@ -1,10 +1,9 @@
 import * as bcrypt from 'bcryptjs';
-import { UserInput, LoginUserInput } from '../types';
+import { UserInput, LoginUserInput, UpdateUserInput } from '../types';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
-
 
 export default {
     Mutation: {
@@ -43,6 +42,27 @@ export default {
                 }
             );
             return { user, token };
+        },
+        deleteUser: async (_: any, { userId }: { userId: string }) => {
+            const deletedUser = await prisma.user.delete({
+                where: {
+                    id: userId
+                }
+            });
+            return !!deletedUser;
+        },
+        updateUser: async (_: any, { updateUserInput }: { updateUserInput: UpdateUserInput }) => {
+            const updatedUser = await prisma.user.update({
+                where: {
+                    id: updateUserInput.userId
+                },
+                data: {
+                    firstName: updateUserInput.firstName || undefined,
+                    lastName: updateUserInput.lastName || undefined,
+                    role: updateUserInput.role || undefined
+                }
+            })
+            return updatedUser;
         }
     },
     Query: {
