@@ -1,25 +1,8 @@
 import { PrismaClient } from '.prisma/client';
 import { ProjectInput, UpdateProjectInput } from '../types';
-import { GraphQLScalarType, Kind } from 'graphql';
+import dateScalar from '../scalars';
 
 const prisma = new PrismaClient();
-
-const dateScalar = new GraphQLScalarType({
-  name: 'Date',
-  description: 'Date custom scalar type',
-  serialize(value) {
-    return value.getTime();
-  },
-  parseValue(value) {
-    return new Date(value);
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.INT) {
-      return new Date(parseInt(ast.value, 10));
-    }
-    return null;
-  }
-});
 
 export default {
   Date: dateScalar,

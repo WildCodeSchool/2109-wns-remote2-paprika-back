@@ -2,8 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server';
 import resolvers from './graphql/resolvers/resolvers';
 import typeDefs from './graphql/schemas/typeDefs';
+import * as dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
 const runServer = () => {
   const prisma = new PrismaClient();
