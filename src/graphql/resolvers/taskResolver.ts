@@ -9,9 +9,9 @@ export default {
       const tasks = await prisma.task.findMany();
       return tasks;
     },
-    getTask: async (_ : any, {taskId} : {taskId: string}) => {
+    getTask: async (_: any, { taskId }: { taskId: string }) => {
       const task = await prisma.task.findUnique({
-        where:{
+        where: {
           id: taskId
         }
       })
@@ -20,7 +20,7 @@ export default {
   },
 
   Mutation: {
-    createTask: async (_ : any, {taskInput} : {taskInput : TaskInput}) => {
+    createTask: async (_: any, { taskInput }: { taskInput: TaskInput }) => {
       const task = await prisma.task.create({
         data: {
           name: taskInput.name,
@@ -30,7 +30,7 @@ export default {
       });
       return task;
     },
-    deleteTask: async (_ : any, {taskId} : {taskId: string} ) => {
+    deleteTask: async (_: any, { taskId }: { taskId: string }) => {
       const deletedTask = await prisma.task.delete({
         where: {
           id: taskId
@@ -38,9 +38,9 @@ export default {
       });
       return deletedTask;
     },
-    updateTask: async (_ : any, {updateTaskInput} : {updateTaskInput: UpdateTaskInput}) => {
+    updateTask: async (_: any, { updateTaskInput }: { updateTaskInput: UpdateTaskInput }) => {
       const updatedTask = await prisma.task.update({
-        where:{
+        where: {
           id: updateTaskInput.taskId
         },
         data: {
@@ -55,3 +55,4 @@ export default {
     }
   }
 };
+
