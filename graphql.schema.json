@@ -21,7 +21,7 @@
       {
         "kind": "SCALAR",
         "name": "Date",
-        "description": null,
+        "description": "Date custom scalar type",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
