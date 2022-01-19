@@ -1,6 +1,16 @@
 services:
-  parika-back:
-    image: paprika-back
+  front:
+    image: enrgy057/paprika-front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src/:/enrgy057/paprika-front/src/
+      - ./public/:/enrgy057/paprika-front/public/
+    depends_on:
+      back:
+        condition: service_started
+  back:
+    image: melissakintz/paprika-back
     ports:
       - 4000:4000
     volumes:
@@ -8,7 +18,8 @@ services:
     links:
       - mysqldb
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_started
   mysqldb:
     image: mysql
     restart: always

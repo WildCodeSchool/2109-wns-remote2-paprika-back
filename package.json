@@ -7,7 +7,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "start": "tsc && nodemon dist/src/app.js",
+    "start": "tsc && npx prisma migrate dev && nodemon dist/src/app.js",
     "test": "jest -i",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
