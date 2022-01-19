@@ -1,25 +1,23 @@
 services:
   parika-back:
-    image: melissakintz/paprika-back
-    ports: 
+    image: paprika-back
+    ports:
       - 4000:4000
     volumes:
       - ./src/:/paprika-back/src/
+    links:
+      - mysqldb
     depends_on:
-      - mysql
-  mysql:  
+      - mysqldb
+  mysqldb:
     image: mysql
     restart: always
-    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: 'paprika'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: paprika
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
     ports:
-      - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
+      - 3306:3306
     volumes:
-      - ./data:/data/db
+      - ./data:/var/lib/mysql
