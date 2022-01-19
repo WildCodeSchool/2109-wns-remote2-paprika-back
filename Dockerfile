@@ -13,6 +13,4 @@ RUN npx prisma generate
 COPY src src
 COPY tsconfig.json ./
 
-
-
 CMD npm start
