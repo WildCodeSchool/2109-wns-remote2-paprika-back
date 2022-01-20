@@ -2,5 +2,6 @@
 .env
 /dist
 package-lock.json
+data
 
 !.env.sample
