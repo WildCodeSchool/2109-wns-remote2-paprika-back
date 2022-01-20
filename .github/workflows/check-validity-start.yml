@@ -30,9 +30,7 @@ jobs:
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
-      - name: build
-        run: docker-compose build
       - name: up
-        run: docker-compose up -t 90
+        run: docker-compose up --exit-code-from 2109-wns-remote2-paprika-back_front_1 
       - name: down
         run: docker-compose down
