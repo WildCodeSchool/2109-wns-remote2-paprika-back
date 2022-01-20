@@ -34,6 +34,7 @@ jobs:
         run: docker-compose up -d
   close-app:
     needs: start-app
+    runs-on: ubuntu-latest
     steps:
       - name: down
         run: docker-compose down
