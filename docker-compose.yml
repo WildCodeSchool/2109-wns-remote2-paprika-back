@@ -19,9 +19,11 @@ services:
       - mysqldb
     depends_on:
       mysqldb:
-        condition: service_started
+        condition: service_healthy
   mysqldb:
     image: mysql
+    healthcheck:
+      test: "exit 0"
     restart: always
     environment:
       MYSQL_DATABASE: paprika
