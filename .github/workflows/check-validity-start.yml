@@ -25,12 +25,10 @@ jobs:
           push: true
           tags: melissakintz/paprika-back:latest
   start-app:
+    needs: docker
     runs-on: ubuntu-latest
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
       - name: docker-compose
-        run: docker-compose up --build
-      - name: stop-docker
-        if: always()
-        run: docker-compose down
+        run: docker-compose up --build --exit-code-from web
