@@ -30,7 +30,9 @@ jobs:
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
-      - name: docker-compose
-        run: docker-compose up --build -d
-      - name: docker down
+      - name: build
+        run: docker-compose build
+      - name: up
+        run: docker-compose up -t 90
+      - name: down
         run: docker-compose down
