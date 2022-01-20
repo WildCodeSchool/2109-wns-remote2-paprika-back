@@ -31,4 +31,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: docker-compose
-        run: docker-compose up --build --exit-code-from web
+        run: docker-compose up --build -d
+      - name: docker down
+        run: docker-compose down
