@@ -30,7 +30,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: docker-compose
-        run: docker-compose up --build logs
+        run: docker-compose up --build
       - name: stop-docker
         if: always()
         run: docker-compose down
