@@ -64,6 +64,17 @@ export default {
           id: docId
         }
       });
+    },
+    updateDocument: async (_: any, { docId }: { docId: string }) => {
+      return await prisma.project.update({
+        where: {
+          id: docId
+        },
+        data: {
+          name: 
+
+        }
+      });
     }
   }
 };
