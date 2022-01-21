@@ -1,5 +1,5 @@
 import { Status, Priority } from '@prisma/client';
-import taskResolver from '../src/graphql/resolvers/taskResolver';
+import taskResolver from '../src/graphql/resolvers/taskResolvers';
 
 import { MockContext, Context, createMockContext } from '../testConfig/context';
 
