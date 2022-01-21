@@ -30,9 +30,7 @@ jobs:
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
-      - name: install package
-        run: npm i
-      # - name: Run test
-      #   run: npm run test
-      - name: Run app
-        run: npm start
+      - name: up
+        run: docker-compose up -d
+      - name: down
+        run: docker-compose down
