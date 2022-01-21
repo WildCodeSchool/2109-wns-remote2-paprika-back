@@ -9,6 +9,7 @@ export default gql`
 
   type Mutation {
     addDocument(DocumentInput: DocumentInput!, file: Upload!): Document!
+    deleteDocument(docId: String!): Document
   }
 
   type Document {

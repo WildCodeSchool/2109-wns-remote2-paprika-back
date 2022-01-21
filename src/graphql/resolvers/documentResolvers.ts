@@ -48,6 +48,19 @@ export default {
       });
 
       return newDocument;
+    },
+    deleteDocument: async (_: any, { docId }: { docId: string }) => {
+      //delete in project
+      const fileName = await prisma.document.findUnique({
+        where: { id: docId }
+      });
+
+      fs.unlinkSync(`${__dirname}/${fileName}`);
+      return await prisma.document.delete({
+        where: {
+          id: docId
+        }
+      });
     }
   }
 };
