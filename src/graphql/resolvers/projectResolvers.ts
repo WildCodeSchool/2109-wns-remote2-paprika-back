@@ -1,6 +1,6 @@
 import { PrismaClient } from '.prisma/client';
+import { ProjectInput, UpdateProjectInput } from '../types';
 import dateScalar from '../scalars';
-import { ProjectInput } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -45,19 +45,23 @@ export default {
     updateProject: async (
       _: any,
       {
-        docId,
-        name
+        projectId,
+        updateProjectInput
       }: {
-        docId: string;
-        name: string;
+        projectId: string;
+        updateProjectInput: UpdateProjectInput;
       }
     ) => {
       return await prisma.project.update({
         where: {
-          id: docId
+          id: projectId
         },
         data: {
-          name: name
+          startAt: updateProjectInput.startAt,
+          endAt: updateProjectInput.endAt,
+          name: updateProjectInput.name || undefined,
+          client: updateProjectInput.client || undefined,
+          description: updateProjectInput.description || undefined
         }
       });
     }
