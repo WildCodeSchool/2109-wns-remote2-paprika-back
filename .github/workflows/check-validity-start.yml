@@ -30,6 +30,8 @@ jobs:
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
+      - name: install package
+        run: npm i
       - name: Run test
         run: npm run test
       - name: Run app
