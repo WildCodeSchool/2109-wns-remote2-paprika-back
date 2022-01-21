@@ -35,6 +35,7 @@ export type CommentInput = {
 
 export type Document = {
   __typename?: 'Document';
+  fileName: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
   projectId: Scalars['String'];
@@ -414,6 +415,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  fileName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   projectId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

@@ -19,6 +19,9 @@ export default {
         where: { projectId: projectId }
       });
       return documents;
+    },
+    getDocumentById: async (_: any, { docId }: { docId: string }) => {
+      return await prisma.document.findUnique({ where: { id: docId } });
     }
   },
   Mutation: {

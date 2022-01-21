@@ -4,12 +4,13 @@ export default gql`
   scalar Upload
 
   type Query {
-    getAllDocumentsByProject(projectId: String!): [Document!]!
+    getAllDocumentsByProject(projectId: String!): [Document]
+    getDocumentById(docId: String!): Document
   }
 
   type Mutation {
     addDocument(DocumentInput: DocumentInput!, file: Upload!): Document!
-    deleteDocument(docId: String!): Document
+    deleteDocument(docId: String!): Document!
   }
 
   type Document {
