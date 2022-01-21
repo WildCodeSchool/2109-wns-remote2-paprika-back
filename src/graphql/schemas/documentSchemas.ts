@@ -5,13 +5,13 @@ export default gql`
 
   type Query {
     getAllDocumentsByProject(projectId: String!): [Document]
-    getDocumentById(docId: String!, name:String!): Document
+    getDocumentById(docId: String!): Document
   }
 
   type Mutation {
     addDocument(DocumentInput: DocumentInput!, file: Upload!): Document!
     deleteDocument(docId: String!): Document!
-    updateDocument(docId: String!): Document!
+    updateDocument(docId: String!, newName: String!): Document!
   }
 
   type Document {

@@ -71,11 +71,13 @@ export type Mutation = {
   createProject: Project;
   createTask: Task;
   deleteComment: Scalars['Boolean'];
+  deleteDocument: Document;
   deleteProject?: Maybe<Scalars['Boolean']>;
   deleteTask?: Maybe<Scalars['Boolean']>;
   deleteUser?: Maybe<Scalars['Boolean']>;
   login: LoginResponse;
   register: User;
+  updateDocument: Document;
   updateProject: Project;
   updateTask: Task;
   updateUser: User;
@@ -108,6 +110,11 @@ export type MutationDeleteCommentArgs = {
 };
 
 
+export type MutationDeleteDocumentArgs = {
+  docId: Scalars['String'];
+};
+
+
 export type MutationDeleteProjectArgs = {
   projectId: Scalars['String'];
 };
@@ -130,6 +137,12 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   userInput: UserInput;
+};
+
+
+export type MutationUpdateDocumentArgs = {
+  docId: Scalars['String'];
+  newName: Scalars['String'];
 };
 
 
@@ -172,11 +185,12 @@ export type ProjectInput = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllDocumentsByProject: Array<Document>;
+  getAllDocumentsByProject?: Maybe<Array<Maybe<Document>>>;
   getAllProjects: Array<Project>;
   getAllTasks: Array<Task>;
   getAllUsers: Array<User>;
   getCommentsByTask: Array<Comment>;
+  getDocumentById?: Maybe<Document>;
   getProject: Project;
   getTask: Task;
   getUser: User;
@@ -190,6 +204,11 @@ export type QueryGetAllDocumentsByProjectArgs = {
 
 export type QueryGetCommentsByTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type QueryGetDocumentByIdArgs = {
+  docId: Scalars['String'];
 };
 
 
@@ -441,11 +460,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'commentId'>>;
+  deleteDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDeleteDocumentArgs, 'docId'>>;
   deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'loginUserInput'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'userInput'>>;
+  updateDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationUpdateDocumentArgs, 'docId' | 'newName'>>;
   updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'projectId' | 'updateProjectInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'updateUserInput'>>;
@@ -462,11 +483,12 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAllDocumentsByProject?: Resolver<Array<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetAllDocumentsByProjectArgs, 'projectId'>>;
+  getAllDocumentsByProject?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType, RequireFields<QueryGetAllDocumentsByProjectArgs, 'projectId'>>;
   getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   getCommentsByTask?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
+  getDocumentById?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentByIdArgs, 'docId'>>;
   getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;

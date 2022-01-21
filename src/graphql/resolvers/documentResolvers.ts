@@ -67,14 +67,14 @@ export default {
     },
     updateDocument: async (
       _: any,
-      { docId, name }: { docId: string; name: string }
+      { docId, newName }: { docId: string; newName: string }
     ) => {
       return await prisma.project.update({
         where: {
           id: docId
         },
         data: {
-          name: name
+          name: newName
         }
       });
     }
