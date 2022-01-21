@@ -15,6 +15,8 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type Comment = {
@@ -31,6 +33,25 @@ export type CommentInput = {
   taskId: Scalars['String'];
 };
 
+export type Document = {
+  __typename?: 'Document';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  projectId: Scalars['String'];
+};
+
+export type DocumentInput = {
+  name: Scalars['String'];
+  projectId: Scalars['String'];
+};
+
+export type File = {
+  __typename?: 'File';
+  encoding: Scalars['String'];
+  filename: Scalars['String'];
+  mimetype: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   token?: Maybe<Scalars['String']>;
@@ -44,7 +65,8 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createComment?: Maybe<Comment>;
+  addDocument: Document;
+  createComment: Comment;
   createProject: Project;
   createTask: Task;
   deleteComment: Scalars['Boolean'];
@@ -56,6 +78,12 @@ export type Mutation = {
   updateProject: Project;
   updateTask: Task;
   updateUser: User;
+};
+
+
+export type MutationAddDocumentArgs = {
+  DocumentInput: DocumentInput;
+  file: Scalars['Upload'];
 };
 
 
@@ -143,13 +171,19 @@ export type ProjectInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getAllDocumentsByProject: Array<Document>;
   getAllProjects: Array<Project>;
   getAllTasks: Array<Task>;
   getAllUsers: Array<User>;
-  getCommentsByTask?: Maybe<Array<Maybe<Comment>>>;
+  getCommentsByTask: Array<Comment>;
   getProject: Project;
   getTask: Task;
   getUser: User;
+};
+
+
+export type QueryGetAllDocumentsByProjectArgs = {
+  projectId: Scalars['String'];
 };
 
 
@@ -315,6 +349,9 @@ export type ResolversTypes = {
   Comment: ResolverTypeWrapper<Comment>;
   CommentInput: CommentInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
+  Document: ResolverTypeWrapper<Document>;
+  DocumentInput: DocumentInput;
+  File: ResolverTypeWrapper<File>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   LoginUserInput: LoginUserInput;
@@ -331,6 +368,7 @@ export type ResolversTypes = {
   UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
   UpdateUserInput: UpdateUserInput;
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
 };
@@ -341,6 +379,9 @@ export type ResolversParentTypes = {
   Comment: Comment;
   CommentInput: CommentInput;
   Date: Scalars['Date'];
+  Document: Document;
+  DocumentInput: DocumentInput;
+  File: File;
   ID: Scalars['ID'];
   LoginResponse: LoginResponse;
   LoginUserInput: LoginUserInput;
@@ -354,6 +395,7 @@ export type ResolversParentTypes = {
   UpdateProjectInput: UpdateProjectInput;
   UpdateTaskInput: UpdateTaskInput;
   UpdateUserInput: UpdateUserInput;
+  Upload: Scalars['Upload'];
   User: User;
   UserInput: UserInput;
 };
@@ -371,6 +413,20 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
+export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  projectId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
+  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -378,7 +434,8 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
+  addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput' | 'file'>>;
+  createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'commentId'>>;
@@ -403,10 +460,11 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getAllDocumentsByProject?: Resolver<Array<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetAllDocumentsByProjectArgs, 'projectId'>>;
   getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  getCommentsByTask?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
+  getCommentsByTask?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
   getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
@@ -423,6 +481,10 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -435,11 +497,14 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = {
   Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  Document?: DocumentResolvers<ContextType>;
+  File?: FileResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
 
