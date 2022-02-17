@@ -96,6 +96,7 @@ model Comment {
 model Document {
   id        String  @id @default(uuid())
   name      String
+  fileName  String  @map("file_name")
   project   Project @relation(fields: [projectId], references: [id])
   projectId String  @map("project_id")
 
