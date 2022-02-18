@@ -18,12 +18,12 @@ export default {
       return task;
     },
     getTaskByProject: async (_: any, { projectId }: { projectId: string }) => {
-      const task = await prisma.task.findMany({
+      const tasks = await prisma.task.findMany({
         where: {
           projectId: projectId
         }
       });
-      return task;
+      return tasks;
     }
   },
 
