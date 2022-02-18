@@ -1923,7 +1923,7 @@
       {
         "kind": "SCALAR",
         "name": "Upload",
-        "description": "The `Upload` scalar type represents a file upload.",
+        "description": null,
         "fields": null,
         "inputFields": null,
         "interfaces": null,

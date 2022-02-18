@@ -14,9 +14,17 @@ export default {
         where: {
           id: taskId
         }
-      })
+      });
       return task;
     },
+    getTaskByProject: async (_: any, { projectId }: { projectId: string }) => {
+      const task = await prisma.task.findMany({
+        where: {
+          projectId: projectId
+        }
+      });
+      return task;
+    }
   },
 
   Mutation: {
@@ -25,7 +33,7 @@ export default {
         data: {
           name: taskInput.name,
           description: taskInput.description,
-          projectId: taskInput.projectId,
+          projectId: taskInput.projectId
         }
       });
       return task;
@@ -38,7 +46,10 @@ export default {
       });
       return deletedTask;
     },
-    updateTask: async (_: any, { updateTaskInput }: { updateTaskInput: UpdateTaskInput }) => {
+    updateTask: async (
+      _: any,
+      { updateTaskInput }: { updateTaskInput: UpdateTaskInput }
+    ) => {
       const updatedTask = await prisma.task.update({
         where: {
           id: updateTaskInput.taskId
@@ -50,9 +61,8 @@ export default {
           priority: updateTaskInput.priority,
           timing: updateTaskInput.timing
         }
-      })
+      });
       return updatedTask;
     }
   }
 };
-

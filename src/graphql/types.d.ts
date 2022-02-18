@@ -15,7 +15,6 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
