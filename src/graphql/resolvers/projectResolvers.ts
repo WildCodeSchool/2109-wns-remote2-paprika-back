@@ -15,13 +15,33 @@ export default {
       });
       return projects;
     },
-    getProject: async (_: any, { projectId }: { projectId: string }) => {
+    getProjectById: async (_: any, { projectId }: { projectId: string }) => {
       const project = await prisma.project.findUnique({
         where: {
           id: projectId
         }
       });
       return project;
+    },
+    getProjectsByUser: async () => {
+      //TODO get auth user
+      const userId = '3325c924-3ae5-4507-95c7-819414850f29'; //get user auth
+      const userProjects = await prisma.userProject.findMany({
+        where: {
+          userId: userId
+        }
+      });
+
+      return userProjects.map(async (userProject) => {
+        const project = await prisma.project.findUnique({
+          where: { id: userProject.projectId }
+        });
+        return project;
+      });
+    },
+    getProjectRoles: async () => {
+      const roles = await prisma.projectRole.findMany();
+      return roles;
     }
   },
 
@@ -68,6 +88,14 @@ export default {
           description: updateProjectInput.description || undefined
         }
       });
+    },
+    createProjectRole: async (_: any, { roleName }: { roleName: string }) => {
+      const role = await prisma.projectRole.create({
+        data: {
+          name: roleName
+        }
+      });
+      return role;
     }
   }
 };
