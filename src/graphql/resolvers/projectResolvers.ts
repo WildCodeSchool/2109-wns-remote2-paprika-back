@@ -1,6 +1,6 @@
 import { PrismaClient } from '.prisma/client';
-import { ProjectInput, UpdateProjectInput } from '../types';
 import dateScalar from '../scalars';
+import { ProjectInput, UpdateProjectInput } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,11 @@ export default {
   Date: dateScalar,
   Query: {
     getAllProjects: async () => {
-      const projects = await prisma.project.findMany();
+      const projects = await prisma.project.findMany({
+        orderBy: {
+          startAt: 'desc'
+        }
+      });
       return projects;
     },
     getProject: async (_: any, { projectId }: { projectId: string }) => {

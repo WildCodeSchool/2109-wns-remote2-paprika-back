@@ -4,6 +4,7 @@ export default gql`
   type Query {
     getAllTasks: [Task!]!
     getTask(taskId: String!): Task!
+    getTaskByProject(projectId: String!): [Task]!
   }
   type Mutation {
     createTask(taskInput: TaskInput!): Task!

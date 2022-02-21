@@ -15,7 +15,6 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -193,6 +192,7 @@ export type Query = {
   getDocumentById?: Maybe<Document>;
   getProject: Project;
   getTask: Task;
+  getTaskByProject: Task;
   getUser: User;
 };
 
@@ -219,6 +219,11 @@ export type QueryGetProjectArgs = {
 
 export type QueryGetTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type QueryGetTaskByProjectArgs = {
+  projectId: Scalars['String'];
 };
 
 
@@ -491,6 +496,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getDocumentById?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentByIdArgs, 'docId'>>;
   getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
+  getTaskByProject?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskByProjectArgs, 'projectId'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
 };
 
