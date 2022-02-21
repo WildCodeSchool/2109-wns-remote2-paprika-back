@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 
 export default function generateFileName(name: string) {
   const index = name.lastIndexOf('.');
@@ -7,6 +7,6 @@ export default function generateFileName(name: string) {
   const fileName = `${baseName.replace(
     /[\s\.]/g,
     '-'
-  )}-${uuidv4()}${extention}`;
+  )}-${extention}`;
   return fileName.toLowerCase();
 }
