@@ -1,44 +1,46 @@
 import { gql } from 'apollo-server';
 
-export default gql`
-  type Query {
-    getAllUsers: [User!]!
-    getUser(userId: String!): User!
-  }
+export default gql`    
+    type Query {
+        getAllUsers: [User!]!
+        getUser(userId: String!): User!
+    }
 
-  type Mutation {
-    register(userInput: UserInput!): User!
-    login(loginUserInput: LoginUserInput!): LoginResponse!
-    deleteUser(userId: String!): Boolean
-    updateUser(updateUserInput: UpdateUserInput!): User!
-  }
+    type Mutation {
+        register(userCreateInput: UserCreateInput!): AuthPayLoad!
+        login(userLoginInput: UserLoginInput!): AuthPayLoad!
+        deleteUser(userId: String!): Boolean
+        updateUser(updateUserInput: UpdateUserInput!): User!
+    }
 
-  type User {
-    id: ID!
-    email: String!
-    lastName: String!
-    firstName: String!
-    role: RoleSite
-  }
+    type User {
+        id: ID!
+        email: String!
+        lastName: String!
+        firstName: String!
+        role: RoleSite
+        password: String!
+    }
 
-  type LoginResponse {
-    token: String
-    user: User
-  }
+    type AuthPayLoad {
+        token: String!
+        user: User!
+    }
 
-  input UserInput {
-    email: String!
-    password: String!
-    lastName: String!
-    firstName: String!
-  }
+    input UserCreateInput {
+        email: String!
+        lastName: String!
+        firstName: String!
+        role: RoleSite
+        password: String!
+    }
 
-  input LoginUserInput {
-    email: String!
-    password: String!
-  }
+    input UserLoginInput {
+        email: String!
+        password: String!
+    }
 
-  input UpdateUserInput {
+    input UpdateUserInput {
     userId: String!
     lastName: String
     firstName: String
