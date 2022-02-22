@@ -19,6 +19,11 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AuthPayLoad = {
+  __typename?: 'AuthPayLoad';
+  token: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   content: Scalars['String'];
@@ -53,17 +58,6 @@ export type File = {
   mimetype: Scalars['String'];
 };
 
-export type LoginResponse = {
-  __typename?: 'LoginResponse';
-  token?: Maybe<Scalars['String']>;
-  user?: Maybe<User>;
-};
-
-export type LoginUserInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   addDocument: Document;
@@ -75,8 +69,8 @@ export type Mutation = {
   deleteProject?: Maybe<Scalars['Boolean']>;
   deleteTask?: Maybe<Scalars['Boolean']>;
   deleteUser?: Maybe<Scalars['Boolean']>;
-  login: LoginResponse;
-  register: User;
+  login: AuthPayLoad;
+  register: AuthPayLoad;
   updateDocument: Document;
   updateProject: Project;
   updateTask: Task;
@@ -131,12 +125,12 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationLoginArgs = {
-  loginUserInput: LoginUserInput;
+  userLoginInput: UserLoginInput;
 };
 
 
 export type MutationRegisterArgs = {
-  userInput: UserInput;
+  userCreateInput: UserCreateInput;
 };
 
 
@@ -286,13 +280,20 @@ export type User = {
   firstName: Scalars['String'];
   id: Scalars['ID'];
   lastName: Scalars['String'];
+  password: Scalars['String'];
   role?: Maybe<RoleSite>;
 };
 
-export type UserInput = {
+export type UserCreateInput = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  password: Scalars['String'];
+  role?: InputMaybe<RoleSite>;
+};
+
+export type UserLoginInput = {
+  email: Scalars['String'];
   password: Scalars['String'];
 };
 
@@ -365,6 +366,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AuthPayLoad: ResolverTypeWrapper<AuthPayLoad>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Comment: ResolverTypeWrapper<Comment>;
   CommentInput: CommentInput;
@@ -373,8 +375,6 @@ export type ResolversTypes = {
   DocumentInput: DocumentInput;
   File: ResolverTypeWrapper<File>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  LoginResponse: ResolverTypeWrapper<LoginResponse>;
-  LoginUserInput: LoginUserInput;
   Mutation: ResolverTypeWrapper<{}>;
   Priority: Priority;
   Project: ResolverTypeWrapper<Project>;
@@ -390,11 +390,13 @@ export type ResolversTypes = {
   UpdateUserInput: UpdateUserInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
-  UserInput: UserInput;
+  UserCreateInput: UserCreateInput;
+  UserLoginInput: UserLoginInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AuthPayLoad: AuthPayLoad;
   Boolean: Scalars['Boolean'];
   Comment: Comment;
   CommentInput: CommentInput;
@@ -403,8 +405,6 @@ export type ResolversParentTypes = {
   DocumentInput: DocumentInput;
   File: File;
   ID: Scalars['ID'];
-  LoginResponse: LoginResponse;
-  LoginUserInput: LoginUserInput;
   Mutation: {};
   Project: Project;
   ProjectInput: ProjectInput;
@@ -417,7 +417,13 @@ export type ResolversParentTypes = {
   UpdateUserInput: UpdateUserInput;
   Upload: Scalars['Upload'];
   User: User;
-  UserInput: UserInput;
+  UserCreateInput: UserCreateInput;
+  UserLoginInput: UserLoginInput;
+};
+
+export type AuthPayLoadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayLoad'] = ResolversParentTypes['AuthPayLoad']> = {
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
@@ -448,12 +454,6 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
-  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput' | 'file'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
@@ -464,8 +464,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'projectId'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'userId'>>;
-  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'loginUserInput'>>;
-  register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'userInput'>>;
+  login?: Resolver<ResolversTypes['AuthPayLoad'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'userLoginInput'>>;
+  register?: Resolver<ResolversTypes['AuthPayLoad'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'userCreateInput'>>;
   updateDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationUpdateDocumentArgs, 'docId' | 'newName'>>;
   updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'projectId' | 'updateProjectInput'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'updateTaskInput'>>;
@@ -514,16 +514,17 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['RoleSite']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  AuthPayLoad?: AuthPayLoadResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Document?: DocumentResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
-  LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
