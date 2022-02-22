@@ -11,7 +11,6 @@ export default gql`
     login(loginUserInput: LoginUserInput!): LoginResponse!
     deleteUser(userId: String!): Boolean
     updateUser(updateUserInput: UpdateUserInput!): User!
-    assignProject(projectId: String!, roleId: String!): Boolean
   }
 
   type User {

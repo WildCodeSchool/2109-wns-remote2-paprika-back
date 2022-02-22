@@ -66,7 +66,7 @@ export type LoginUserInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   addDocument: Document;
-  assignProject?: Maybe<Scalars['Boolean']>;
+  assignUsers?: Maybe<Scalars['Boolean']>;
   createComment: Comment;
   createProject: Project;
   createProjectRole: ProjectRole;
@@ -91,9 +91,9 @@ export type MutationAddDocumentArgs = {
 };
 
 
-export type MutationAssignProjectArgs = {
+export type MutationAssignUsersArgs = {
   projectId: Scalars['String'];
-  roleId: Scalars['String'];
+  usersRoles?: InputMaybe<Array<InputMaybe<UsersRoles>>>;
 };
 
 
@@ -322,6 +322,11 @@ export type UserInput = {
   password: Scalars['String'];
 };
 
+export type UsersRoles = {
+  id: Scalars['String'];
+  role: Scalars['String'];
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -418,6 +423,7 @@ export type ResolversTypes = {
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
+  UsersRoles: UsersRoles;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -446,6 +452,7 @@ export type ResolversParentTypes = {
   Upload: Scalars['Upload'];
   User: User;
   UserInput: UserInput;
+  UsersRoles: UsersRoles;
 };
 
 export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
@@ -484,7 +491,7 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput' | 'file'>>;
-  assignProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAssignProjectArgs, 'projectId' | 'roleId'>>;
+  assignUsers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAssignUsersArgs, 'projectId'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createProjectRole?: Resolver<ResolversTypes['ProjectRole'], ParentType, ContextType, RequireFields<MutationCreateProjectRoleArgs, 'roleName'>>;

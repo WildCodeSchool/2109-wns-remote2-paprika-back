@@ -96,6 +96,26 @@ export default {
         }
       });
       return role;
+    },
+    assignUsers: async (
+      _: any,
+      {
+        projectId,
+        usersRoles
+      }: {
+        projectId: string;
+        usersRoles: Array<{ userId: string; roleId: string }>;
+      }
+    ) => {
+      usersRoles.forEach(async (user) => {
+        await prisma.userProject.create({
+          data: {
+            userId: user.userId,
+            projectRoleId: user.roleId,
+            projectId: projectId
+          }
+        });
+      });
     }
   }
 };

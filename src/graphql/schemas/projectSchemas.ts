@@ -18,6 +18,7 @@ export default gql`
       updateProjectInput: UpdateProjectInput!
     ): Project!
     createProjectRole(roleName: String!): ProjectRole!
+    assignUsers(projectId: String!, usersRoles: [UsersRoles]): Boolean
   }
 
   type Project {
@@ -46,5 +47,10 @@ export default gql`
   type ProjectRole {
     id: ID!
     name: String!
+  }
+
+  input UsersRoles {
+    userId: String!
+    roleId: String!
   }
 `;

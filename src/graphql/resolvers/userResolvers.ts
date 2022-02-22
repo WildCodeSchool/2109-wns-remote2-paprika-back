@@ -74,21 +74,6 @@ export default {
       });
       return updatedUser;
     },
-    assignProject: async (
-      _: any,
-      { projectId, roleId }: { projectId: string; roleId: string }
-    ) => {
-      //TODO get user auth
-      const userId = '3325c924-3ae5-4507-95c7-819414850f29';
-      const userProject = await prisma.userProject.create({
-        data: {
-          userId: userId,
-          projectRoleId: roleId,
-          projectId: projectId
-        }
-      });
-      return !!userProject;
-    }
   },
   Query: {
     getAllUsers: async () => {
