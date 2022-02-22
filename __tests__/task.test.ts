@@ -1,10 +1,13 @@
-import { Status, Priority } from '@prisma/client';
-import taskResolver from '../src/graphql/resolvers/taskResolver';
-
-import { MockContext, Context, createMockContext } from '../testConfig/context';
+import { Priority, Status } from '@prisma/client';
+import { Context, createMockContext, MockContext } from './context';
+import { TaskInput } from './../src/graphql/types.d';
 
 let mockCtx: MockContext;
 let ctx: Context;
+
+async function createTask(task: TaskInput, ctx: Context) {
+  return await ctx.prisma.task.create({ data: task });
+}
 
 beforeEach(() => {
   mockCtx = createMockContext();
@@ -13,7 +16,7 @@ beforeEach(() => {
 
 test('should create new task ', async () => {
   const taskInput = {
-    id: '',
+    id: '123e4567-e89b-12d3-a456-426614174000',
     name: 'task',
     description: 'desc',
     projectId: '08e10906-c1e1-4919-ba81-4e9d8847da3d',
@@ -21,15 +24,11 @@ test('should create new task ', async () => {
     status: Status.OPEN,
     priority: Priority.LOW
   };
-  const _parent = '';
 
   mockCtx.prisma.task.create.mockResolvedValue(taskInput);
-  const taskCreated = taskResolver.Mutation.createTask(_parent, {
-    taskInput: taskInput
-  });
 
-  await expect(taskCreated).resolves.toEqual({
-    id: (await taskCreated).id,
+  expect(createTask(taskInput, ctx)).resolves.toEqual({
+    id: '123e4567-e89b-12d3-a456-426614174000',
     name: 'task',
     description: 'desc',
     projectId: '08e10906-c1e1-4919-ba81-4e9d8847da3d',
