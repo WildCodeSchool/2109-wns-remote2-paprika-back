@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import userSchemas from '../schemas/userSchemas';
 import { TaskInput, UpdateTaskInput } from '../types';
 
 const prisma = new PrismaClient();
@@ -33,7 +34,10 @@ export default {
         data: {
           name: taskInput.name,
           description: taskInput.description,
-          projectId: taskInput.projectId
+          projectId: taskInput.projectId,
+          // users: {
+          //   connect: 
+          // }
         }
       });
       return task;

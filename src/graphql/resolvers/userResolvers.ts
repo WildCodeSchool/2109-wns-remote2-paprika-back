@@ -59,7 +59,7 @@ export default {
                 data: {
                     firstName: updateUserInput.firstName || undefined,
                     lastName: updateUserInput.lastName || undefined,
-                    role: updateUserInput.role || undefined
+                    role: updateUserInput.role || undefined,
                 }
             })
             return updatedUser;
