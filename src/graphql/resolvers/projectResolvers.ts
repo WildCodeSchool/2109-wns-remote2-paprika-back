@@ -107,15 +107,26 @@ export default {
         usersRoles: Array<{ userId: string; roleId: string }>;
       }
     ) => {
-      usersRoles.forEach(async (user) => {
-        await prisma.userProject.create({
-          data: {
-            userId: user.userId,
-            projectRoleId: user.roleId,
-            projectId: projectId
-          }
+      try {
+        usersRoles.forEach(async (user) => {
+          await prisma.userProject.upsert({
+            where: {
+              userId_projectId: { userId: user.userId, projectId: projectId }
+            },
+            update: {
+              projectRoleId: user.roleId
+            },
+            create: {
+              userId: user.userId,
+              projectRoleId: user.roleId,
+              projectId: projectId
+            }
+          });
         });
-      });
+        return true;
+      } catch {
+        return false;
+      }
     }
   }
 };
