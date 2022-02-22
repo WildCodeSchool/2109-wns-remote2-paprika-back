@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,7 +14,6 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -61,8 +59,10 @@ export type File = {
 export type Mutation = {
   __typename?: 'Mutation';
   addDocument: Document;
+  assignUsers?: Maybe<Scalars['Boolean']>;
   createComment: Comment;
   createProject: Project;
+  createProjectRole: ProjectRole;
   createTask: Task;
   deleteComment: Scalars['Boolean'];
   deleteDocument: Document;
@@ -84,6 +84,12 @@ export type MutationAddDocumentArgs = {
 };
 
 
+export type MutationAssignUsersArgs = {
+  projectId: Scalars['String'];
+  usersRoles?: InputMaybe<Array<InputMaybe<UsersRoles>>>;
+};
+
+
 export type MutationCreateCommentArgs = {
   commentInput: CommentInput;
 };
@@ -91,6 +97,11 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateProjectArgs = {
   projectInput: ProjectInput;
+};
+
+
+export type MutationCreateProjectRoleArgs = {
+  roleName: Scalars['String'];
 };
 
 
@@ -177,6 +188,12 @@ export type ProjectInput = {
   name: Scalars['String'];
 };
 
+export type ProjectRole = {
+  __typename?: 'ProjectRole';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllDocumentsByProject?: Maybe<Array<Maybe<Document>>>;
@@ -185,8 +202,11 @@ export type Query = {
   getAllUsers: Array<User>;
   getCommentsByTask: Array<Comment>;
   getDocumentById?: Maybe<Document>;
-  getProject: Project;
+  getProjectById: Project;
+  getProjectRoles: Array<Maybe<ProjectRole>>;
+  getProjectsByUser: Array<Maybe<Project>>;
   getTask: Task;
+  getTaskByProject: Array<Maybe<Task>>;
   getUser: User;
 };
 
@@ -206,13 +226,18 @@ export type QueryGetDocumentByIdArgs = {
 };
 
 
-export type QueryGetProjectArgs = {
+export type QueryGetProjectByIdArgs = {
   projectId: Scalars['String'];
 };
 
 
 export type QueryGetTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type QueryGetTaskByProjectArgs = {
+  projectId: Scalars['String'];
 };
 
 
@@ -297,6 +322,11 @@ export type UserLoginInput = {
   password: Scalars['String'];
 };
 
+export type UsersRoles = {
+  id: Scalars['String'];
+  role: Scalars['String'];
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -379,6 +409,7 @@ export type ResolversTypes = {
   Priority: Priority;
   Project: ResolverTypeWrapper<Project>;
   ProjectInput: ProjectInput;
+  ProjectRole: ResolverTypeWrapper<ProjectRole>;
   Query: ResolverTypeWrapper<{}>;
   RoleSite: RoleSite;
   Status: Status;
@@ -408,6 +439,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   Project: Project;
   ProjectInput: ProjectInput;
+  ProjectRole: ProjectRole;
   Query: {};
   String: Scalars['String'];
   Task: Task;
@@ -456,8 +488,10 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput' | 'file'>>;
+  assignUsers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAssignUsersArgs, 'projectId'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
+  createProjectRole?: Resolver<ResolversTypes['ProjectRole'], ParentType, ContextType, RequireFields<MutationCreateProjectRoleArgs, 'roleName'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'taskInput'>>;
   deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'commentId'>>;
   deleteDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDeleteDocumentArgs, 'docId'>>;
@@ -482,6 +516,12 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ProjectRoleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProjectRole'] = ResolversParentTypes['ProjectRole']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllDocumentsByProject?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType, RequireFields<QueryGetAllDocumentsByProjectArgs, 'projectId'>>;
   getAllProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
@@ -489,8 +529,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   getCommentsByTask?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
   getDocumentById?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentByIdArgs, 'docId'>>;
-  getProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectArgs, 'projectId'>>;
+  getProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectByIdArgs, 'projectId'>>;
+  getProjectRoles?: Resolver<Array<Maybe<ResolversTypes['ProjectRole']>>, ParentType, ContextType>;
+  getProjectsByUser?: Resolver<Array<Maybe<ResolversTypes['Project']>>, ParentType, ContextType>;
   getTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<QueryGetTaskArgs, 'taskId'>>;
+  getTaskByProject?: Resolver<Array<Maybe<ResolversTypes['Task']>>, ParentType, ContextType, RequireFields<QueryGetTaskByProjectArgs, 'projectId'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
 };
 
@@ -527,6 +570,7 @@ export type Resolvers<ContextType = any> = {
   File?: FileResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
+  ProjectRole?: ProjectRoleResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
   Upload?: GraphQLScalarType;

@@ -44,11 +44,11 @@ export default gql`
     lastName: String
     firstName: String
     role: RoleSite
-    }
+  }
 
-    enum RoleSite {
-        ADMIN
-        USER
-        PO
-    }
-`
+  enum RoleSite {
+    ADMIN
+    USER
+    PO
+  }
+`;
