@@ -5,7 +5,9 @@ export default gql`
 
   type Query {
     getAllProjects: [Project!]!
-    getProject(projectId: String!): Project!
+    getProjectById(projectId: String!): Project!
+    getProjectsByUser: [Project]!
+    getProjectRoles: [ProjectRole]!
   }
 
   type Mutation {
@@ -15,6 +17,8 @@ export default gql`
       projectId: String!
       updateProjectInput: UpdateProjectInput!
     ): Project!
+    createProjectRole(roleName: String!): ProjectRole!
+    assignUsers(projectId: String!, usersRoles: [UsersRoles]): Boolean
   }
 
   type Project {
@@ -38,5 +42,15 @@ export default gql`
     name: String
     client: String
     description: String
+  }
+
+  type ProjectRole {
+    id: ID!
+    name: String!
+  }
+
+  input UsersRoles {
+    userId: String!
+    roleId: String!
   }
 `;
