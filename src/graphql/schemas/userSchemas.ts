@@ -24,6 +24,7 @@ export default gql`
 
     type AuthPayLoad {
         token: String!
+        user: User!
     }
 
     input UserCreateInput {

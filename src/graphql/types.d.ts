@@ -14,12 +14,14 @@ export type Scalars = {
   Float: number;
   /** Date custom scalar type */
   Date: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
 export type AuthPayLoad = {
   __typename?: 'AuthPayLoad';
   token: Scalars['String'];
+  user: User;
 };
 
 export type Comment = {
@@ -323,8 +325,8 @@ export type UserLoginInput = {
 };
 
 export type UsersRoles = {
-  id: Scalars['String'];
-  role: Scalars['String'];
+  roleId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -423,6 +425,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   UserCreateInput: UserCreateInput;
   UserLoginInput: UserLoginInput;
+  UsersRoles: UsersRoles;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -451,10 +454,12 @@ export type ResolversParentTypes = {
   User: User;
   UserCreateInput: UserCreateInput;
   UserLoginInput: UserLoginInput;
+  UsersRoles: UsersRoles;
 };
 
 export type AuthPayLoadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayLoad'] = ResolversParentTypes['AuthPayLoad']> = {
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

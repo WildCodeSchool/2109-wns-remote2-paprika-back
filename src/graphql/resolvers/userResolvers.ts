@@ -28,7 +28,7 @@ export default {
       if (!loggedUser) throw new Error('Unable to Login');
       const isMatch = bcrypt.compareSync(userLoginInput.password, loggedUser.password);
       if (!isMatch) throw new Error('Unable to Login');
-      return { token: jwt.sign(loggedUser, "secretKey") };
+      return { token: jwt.sign(loggedUser, "secretKey"), user: loggedUser };
     },
     deleteUser: async (_: any, { userId }: { userId: string }) => {
       const deletedUser = await prisma.user.delete({
