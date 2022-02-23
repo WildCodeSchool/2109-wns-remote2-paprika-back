@@ -11,7 +11,10 @@ export default gql`
   }
 
   type Mutation {
-    createProject(projectInput: ProjectInput!): Project!
+    createProject(
+      projectInput: ProjectInput!
+      participantsInput: [ParticipantsInput]
+    ): Project!
     deleteProject(projectId: String!): Boolean
     updateProject(
       projectId: String!
@@ -50,7 +53,6 @@ export default gql`
     name: String!
   }
 
-
   type Task {
     id: ID!
     name: String!
@@ -65,6 +67,7 @@ export default gql`
     name: String!
     client: String!
     description: String!
+    userId: String
   }
 
   input UpdateProjectInput {
@@ -83,5 +86,10 @@ export default gql`
   input UsersRoles {
     userId: String!
     roleId: String!
+  }
+
+  input ParticipantsInput {
+    userId: String!
+    projectRoleId: String!
   }
 `;

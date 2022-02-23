@@ -1,6 +1,6 @@
 import { PrismaClient } from '.prisma/client';
 import dateScalar from '../scalars';
-import { ProjectInput, UpdateProjectInput } from '../types';
+import { ParticipantsInput, ProjectInput, UpdateProjectInput } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -63,20 +63,39 @@ export default {
         }
       });
       return projects;
+    },
+    getProjectRoles: async () => {
+      const roles = await prisma.projectRole.findMany();
+      return roles;
     }
   },
 
   Mutation: {
     createProject: async (
       _: any,
-      { projectInput }: { projectInput: ProjectInput }
+      {
+        projectInput,
+        participantsInput
+      }: { projectInput: ProjectInput; participantsInput: ParticipantsInput[] }
     ) => {
+      const participants: Array<{ userId: string; projectRoleId: string }> =
+        participantsInput.map((user) => ({
+          userId: user.userId,
+          projectRoleId: user.projectRoleId
+        }));
+
       return await prisma.project.create({
         data: {
           name: projectInput.name,
           client: projectInput.client,
-          description: projectInput.description
-        }
+          description: projectInput.description,
+          participants: {
+            createMany: {
+              data: participants
+            }
+          }
+        },
+        include: { participants: true }
       });
     },
     deleteProject: async (_: any, { projectId }: { projectId: string }) => {

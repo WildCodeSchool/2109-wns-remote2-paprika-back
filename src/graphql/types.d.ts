@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -98,6 +99,7 @@ export type MutationCreateCommentArgs = {
 
 
 export type MutationCreateProjectArgs = {
+  participantsInput?: InputMaybe<Array<InputMaybe<ParticipantsInput>>>;
   projectInput: ProjectInput;
 };
 
@@ -168,6 +170,11 @@ export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
 };
 
+export type ParticipantsInput = {
+  projectRoleId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
 export enum Priority {
   High = 'HIGH',
   Low = 'LOW',
@@ -181,13 +188,17 @@ export type Project = {
   endAt?: Maybe<Scalars['Date']>;
   id: Scalars['ID'];
   name: Scalars['String'];
+  participants?: Maybe<Array<Maybe<UserProject>>>;
   startAt?: Maybe<Scalars['Date']>;
+  tasks?: Maybe<Array<Maybe<Task>>>;
 };
 
 export type ProjectInput = {
   client: Scalars['String'];
   description: Scalars['String'];
   name: Scalars['String'];
+  projectRoleId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type ProjectRole = {
@@ -308,7 +319,7 @@ export type User = {
   id: Scalars['ID'];
   lastName: Scalars['String'];
   password: Scalars['String'];
-  role?: Maybe<RoleSite>;
+  role: RoleSite;
 };
 
 export type UserCreateInput = {
@@ -322,6 +333,12 @@ export type UserCreateInput = {
 export type UserLoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type UserProject = {
+  __typename?: 'UserProject';
+  projectRole?: Maybe<ProjectRole>;
+  user?: Maybe<User>;
 };
 
 export type UsersRoles = {
@@ -408,6 +425,7 @@ export type ResolversTypes = {
   File: ResolverTypeWrapper<File>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
+  ParticipantsInput: ParticipantsInput;
   Priority: Priority;
   Project: ResolverTypeWrapper<Project>;
   ProjectInput: ProjectInput;
@@ -425,6 +443,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   UserCreateInput: UserCreateInput;
   UserLoginInput: UserLoginInput;
+  UserProject: ResolverTypeWrapper<UserProject>;
   UsersRoles: UsersRoles;
 };
 
@@ -440,6 +459,7 @@ export type ResolversParentTypes = {
   File: File;
   ID: Scalars['ID'];
   Mutation: {};
+  ParticipantsInput: ParticipantsInput;
   Project: Project;
   ProjectInput: ProjectInput;
   ProjectRole: ProjectRole;
@@ -454,6 +474,7 @@ export type ResolversParentTypes = {
   User: User;
   UserCreateInput: UserCreateInput;
   UserLoginInput: UserLoginInput;
+  UserProject: UserProject;
   UsersRoles: UsersRoles;
 };
 
@@ -517,7 +538,9 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   endAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  participants?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserProject']>>>, ParentType, ContextType>;
   startAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -563,7 +586,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  role?: Resolver<Maybe<ResolversTypes['RoleSite']>, ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['RoleSite'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserProject'] = ResolversParentTypes['UserProject']> = {
+  projectRole?: Resolver<Maybe<ResolversTypes['ProjectRole']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -580,5 +609,6 @@ export type Resolvers<ContextType = any> = {
   Task?: TaskResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  UserProject?: UserProjectResolvers<ContextType>;
 };
 
