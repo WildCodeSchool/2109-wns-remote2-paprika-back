@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import userSchemas from '../schemas/userSchemas';
 import { TaskInput, UpdateTaskInput } from '../types';
 
 const prisma = new PrismaClient();
@@ -30,17 +29,22 @@ export default {
 
   Mutation: {
     createTask: async (_: any, { taskInput }: { taskInput: TaskInput }) => {
-      const task = await prisma.task.create({
-        data: {
-          name: taskInput.name,
-          description: taskInput.description,
-          projectId: taskInput.projectId,
-          // users: {
-          //   connect: 
-          // }
-        }
-      });
-      return task;
+      try {
+        const idUser : Array<{id: string}> = taskInput.users.map((userID) => ({ id: userID }));
+        const task = await prisma.task.create({
+          data: {
+            name: taskInput.name,
+            description: taskInput.description,
+            projectId: taskInput.projectId,
+            users: {
+              connect: idUser
+            }
+          }
+        });
+        return task;
+      } catch (err) {
+        return false;
+      }
     },
     deleteTask: async (_: any, { taskId }: { taskId: string }) => {
       const deletedTask = await prisma.task.delete({

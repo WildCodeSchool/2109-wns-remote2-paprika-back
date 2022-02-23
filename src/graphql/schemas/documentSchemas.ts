@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server';
 
 export default gql`
-  # scalar Upload
+  scalar Upload
 
   type Query {
     getAllDocumentsByProject(projectId: String!): [Document]

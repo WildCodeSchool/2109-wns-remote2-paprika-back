@@ -26,6 +26,7 @@ export default gql`
     name: String!
     description: String!
     projectId: String!
+    users: [String!]!
   }
 
   input UpdateTaskInput {
