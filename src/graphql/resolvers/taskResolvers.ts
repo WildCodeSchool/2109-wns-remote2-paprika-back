@@ -29,22 +29,21 @@ export default {
 
   Mutation: {
     createTask: async (_: any, { taskInput }: { taskInput: TaskInput }) => {
-      try {
-        const idUser : Array<{id: string}> = taskInput.users.map((userID) => ({ id: userID }));
+        const idUser: Array<{ id: string }> = taskInput.users.map((userID) => ({
+          id: userID
+        }));
         const task = await prisma.task.create({
+          include: { users: true },
           data: {
-            name: taskInput.name,
-            description: taskInput.description,
-            projectId: taskInput.projectId,
             users: {
               connect: idUser
-            }
+            },
+            name: taskInput.name,
+            description: taskInput.description,
+            projectId: taskInput.projectId
           }
         });
         return task;
-      } catch (err) {
-        return false;
-      }
     },
     deleteTask: async (_: any, { taskId }: { taskId: string }) => {
       const deletedTask = await prisma.task.delete({
