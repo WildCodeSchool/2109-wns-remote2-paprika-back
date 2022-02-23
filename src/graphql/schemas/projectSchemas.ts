@@ -28,6 +28,37 @@ export default gql`
     name: String!
     client: String!
     description: String!
+    tasks: [Task]
+    participants: [UserProject]
+  }
+
+  type UserProject {
+    user: User
+    projectRole: ProjectRole
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    lastName: String!
+    firstName: String!
+    role: RoleSite!
+  }
+
+  type ProjectRole {
+    id: ID!
+    name: String!
+  }
+
+
+  type Task {
+    id: ID!
+    name: String!
+    description: String!
+    status: Status!
+    priority: Priority!
+    projectId: String!
+    timing: String
   }
 
   input ProjectInput {

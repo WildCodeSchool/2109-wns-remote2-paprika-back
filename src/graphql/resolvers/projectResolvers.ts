@@ -11,6 +11,15 @@ export default {
       const projects = await prisma.project.findMany({
         orderBy: {
           startAt: 'desc'
+        },
+        include: {
+          tasks: true,
+          participants: {
+            select: {
+              user: true,
+              projectRole: true
+            }
+          }
         }
       });
       return projects;
@@ -19,6 +28,15 @@ export default {
       const project = await prisma.project.findUnique({
         where: {
           id: projectId
+        },
+        include: {
+          tasks: true,
+          participants: {
+            select: {
+              user: true,
+              projectRole: true
+            }
+          }
         }
       });
       return project;
@@ -26,22 +44,25 @@ export default {
     getProjectsByUser: async () => {
       //TODO get auth user
       const userId = '3325c924-3ae5-4507-95c7-819414850f29'; //get user auth
-      const userProjects = await prisma.userProject.findMany({
+      const projects = await prisma.project.findMany({
         where: {
-          userId: userId
+          participants: {
+            every: {
+              userId: userId
+            }
+          }
+        },
+        include: {
+          tasks: true,
+          participants: {
+            select: {
+              user: true,
+              projectRole: true
+            }
+          }
         }
       });
-
-      return userProjects.map(async (userProject) => {
-        const project = await prisma.project.findUnique({
-          where: { id: userProject.projectId }
-        });
-        return project;
-      });
-    },
-    getProjectRoles: async () => {
-      const roles = await prisma.projectRole.findMany();
-      return roles;
+      return projects;
     }
   },
 
