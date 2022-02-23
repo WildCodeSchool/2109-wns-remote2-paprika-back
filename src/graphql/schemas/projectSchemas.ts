@@ -31,6 +31,7 @@ export default gql`
     name: String!
     client: String!
     description: String!
+    deleted: Boolean!
     tasks: [Task]
     participants: [UserProject]
   }

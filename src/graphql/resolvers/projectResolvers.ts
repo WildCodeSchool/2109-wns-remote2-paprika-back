@@ -9,6 +9,9 @@ export default {
   Query: {
     getAllProjects: async () => {
       const projects = await prisma.project.findMany({
+        where: {
+          deleted: false
+        },
         orderBy: {
           startAt: 'desc'
         },
@@ -46,6 +49,7 @@ export default {
       const userId = '3325c924-3ae5-4507-95c7-819414850f29'; //get user auth
       const projects = await prisma.project.findMany({
         where: {
+          deleted: false,
           participants: {
             every: {
               userId: userId
@@ -99,9 +103,12 @@ export default {
       });
     },
     deleteProject: async (_: any, { projectId }: { projectId: string }) => {
-      const deleted = await prisma.project.delete({
+      const deleted = await prisma.project.update({
         where: {
           id: projectId
+        },
+        data: {
+          deleted: true
         }
       });
       return !!deleted;

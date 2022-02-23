@@ -184,6 +184,7 @@ export enum Priority {
 export type Project = {
   __typename?: 'Project';
   client: Scalars['String'];
+  deleted: Scalars['Boolean'];
   description: Scalars['String'];
   endAt?: Maybe<Scalars['Date']>;
   id: Scalars['ID'];
@@ -197,7 +198,6 @@ export type ProjectInput = {
   client: Scalars['String'];
   description: Scalars['String'];
   name: Scalars['String'];
-  projectRoleId?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
 };
 
@@ -534,6 +534,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
   client?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   endAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
