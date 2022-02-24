@@ -266,6 +266,7 @@ export type Task = {
   projectId: Scalars['String'];
   status: Status;
   timing?: Maybe<Scalars['String']>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type TaskInput = {
@@ -291,6 +292,7 @@ export type UpdateTaskInput = {
   status?: InputMaybe<Status>;
   taskId: Scalars['String'];
   timing?: InputMaybe<Scalars['String']>;
+  users: Array<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -533,6 +535,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   projectId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
   timing?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

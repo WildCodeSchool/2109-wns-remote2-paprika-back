@@ -6,13 +6,20 @@ const prisma = new PrismaClient();
 export default {
   Query: {
     getAllTasks: async () => {
-      const tasks = await prisma.task.findMany();
+      const tasks = await prisma.task.findMany({
+        include:{
+          users: true,
+        }
+      });
       return tasks;
     },
     getTask: async (_: any, { taskId }: { taskId: string }) => {
       const task = await prisma.task.findUnique({
         where: {
           id: taskId
+        },
+        include:{
+          users: true,
         }
       });
       return task;
@@ -57,11 +64,20 @@ export default {
       _: any,
       { updateTaskInput }: { updateTaskInput: UpdateTaskInput }
     ) => {
+
+      const idUser: Array<{ id: string }> = updateTaskInput.users.map((userID) => ({
+        id: userID
+      }));
+
       const updatedTask = await prisma.task.update({
         where: {
           id: updateTaskInput.taskId
         },
+        include: { users: true },
         data: {
+          users: {
+            connect: idUser
+          },
           name: updateTaskInput.name || undefined,
           description: updateTaskInput.description || undefined,
           status: updateTaskInput.status,
