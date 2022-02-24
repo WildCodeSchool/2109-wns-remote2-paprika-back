@@ -59,8 +59,9 @@ model Project {
   name         String
   client       String
   description  String        @db.Text
+  deleted      Boolean       @default(false)
   tasks        Task[]
-  documents    Document[]
+  documents    Document[] 
   participants UserProject[]
 
   @@map("project")
