@@ -372,7 +372,7 @@
             "deprecationReason": null
           },
           {
-            "name": "assignUsers",
+            "name": "assignUsersToProject",
             "description": null,
             "args": [
               {
@@ -836,6 +836,22 @@
             "name": "updateProject",
             "description": null,
             "args": [
+              {
+                "name": "participantsInput",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ParticipantsInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
               {
                 "name": "projectId",
                 "description": null,
