@@ -27,12 +27,9 @@ export default {
   Mutation: {
     addDocument: async (
       _: any,
-      {
-        documentInput,
-        file
-      }: { documentInput: DocumentInput; file: FileUpload }
+      { documentInput, file }: { documentInput: DocumentInput, file: FileUpload }
     ) => {
-      //save file in uploadedFiles
+      // save file in uploadedFiles
       const { createReadStream, filename } = await file;
       const fileStream = createReadStream();
       const newFileName = generateFileName(filename);
@@ -41,7 +38,7 @@ export default {
         fs.createWriteStream(`${__dirname}/uploadedFiles/${newFileName}`)
       );
 
-      //insert on db
+      // insert on db
       const newDocument = await prisma.document.create({
         data: {
           name: documentInput.name,
