@@ -19,9 +19,10 @@ export default gql`
     updateProject(
       projectId: String!
       updateProjectInput: UpdateProjectInput!
+      participantsInput: [ParticipantsInput]
     ): Project!
     createProjectRole(roleName: String!): ProjectRole!
-    assignUsers(projectId: String!, usersRoles: [UsersRoles]): Boolean
+    assignUsersToProject(projectId: String!, usersRoles: [UsersRoles]): Boolean
   }
 
   type Project {

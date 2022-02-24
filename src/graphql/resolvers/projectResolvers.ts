@@ -82,11 +82,7 @@ export default {
         participantsInput
       }: { projectInput: ProjectInput; participantsInput: ParticipantsInput[] }
     ) => {
-      const participants: Array<{ userId: string; projectRoleId: string }> =
-        participantsInput.map((user) => ({
-          userId: user.userId,
-          projectRoleId: user.projectRoleId
-        }));
+      const participants = generateUserRole(participantsInput);
 
       return await prisma.project.create({
         data: {
@@ -108,7 +104,7 @@ export default {
           id: projectId
         },
         data: {
-          deleted: true
+          deleted: { set: true }
         }
       });
       return !!deleted;
@@ -117,13 +113,19 @@ export default {
       _: any,
       {
         projectId,
-        updateProjectInput
+        updateProjectInput,
+        participantsInput
       }: {
         projectId: string;
         updateProjectInput: UpdateProjectInput;
+        participantsInput: ParticipantsInput[];
       }
     ) => {
-      return await prisma.project.update({
+      const userRole = generateUserRole(participantsInput);
+      const userProject = generateUserProject(participantsInput, projectId);
+
+      const project = await prisma.project.update({
+        include: { participants: true },
         where: {
           id: projectId
         },
@@ -135,6 +137,24 @@ export default {
           description: updateProjectInput.description || undefined
         }
       });
+
+      userRole.forEach(async (user, index) => {
+        await prisma.userProject.upsert({
+          where: {
+            userId_projectId: userProject[index]
+          },
+          update: {
+            projectRoleId: userRole[index].projectRoleId
+          },
+          create: {
+            userId: user.userId,
+            projectRoleId: user.projectRoleId,
+            projectId: projectId
+          }
+        });
+      });
+
+      return project;
     },
     createProjectRole: async (_: any, { roleName }: { roleName: string }) => {
       const role = await prisma.projectRole.create({
@@ -144,7 +164,7 @@ export default {
       });
       return role;
     },
-    assignUsers: async (
+    assignUsersToProject: async (
       _: any,
       {
         projectId,
@@ -176,4 +196,21 @@ export default {
       }
     }
   }
+};
+
+const generateUserRole = (participants: ParticipantsInput[]) => {
+  return participants.map((user) => ({
+    userId: user.userId,
+    projectRoleId: user.projectRoleId
+  }));
+};
+
+const generateUserProject = (
+  participants: ParticipantsInput[],
+  projectId: string
+) => {
+  return participants.map((user) => ({
+    userId: user.userId,
+    projectId: projectId
+  }));
 };
