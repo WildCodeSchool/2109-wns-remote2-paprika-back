@@ -28,6 +28,9 @@ export default {
       const tasks = await prisma.task.findMany({
         where: {
           projectId: projectId
+        },
+        include: {
+          users: true
         }
       });
       return tasks;
@@ -98,7 +101,7 @@ export default {
         if (idUsers) {
           const newUsers = JSON.stringify(idUsers);
           if (!newUsers.includes(JSON.stringify(user.id))) {
-            toDelete.push({id: user.id});
+            toDelete.push({ id: user.id });
           }
         }
       });
