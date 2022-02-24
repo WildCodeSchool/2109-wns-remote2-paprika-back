@@ -7,8 +7,8 @@ export default {
   Query: {
     getAllTasks: async () => {
       const tasks = await prisma.task.findMany({
-        include:{
-          users: true,
+        include: {
+          users: true
         }
       });
       return tasks;
@@ -18,8 +18,8 @@ export default {
         where: {
           id: taskId
         },
-        include:{
-          users: true,
+        include: {
+          users: true
         }
       });
       return task;
@@ -36,21 +36,21 @@ export default {
 
   Mutation: {
     createTask: async (_: any, { taskInput }: { taskInput: TaskInput }) => {
-        const idUser: Array<{ id: string }> = taskInput.users.map((userID) => ({
-          id: userID
-        }));
-        const task = await prisma.task.create({
-          include: { users: true },
-          data: {
-            users: {
-              connect: idUser
-            },
-            name: taskInput.name,
-            description: taskInput.description,
-            projectId: taskInput.projectId
-          }
-        });
-        return task;
+      const idUser: Array<{ id: string }> = taskInput.users.map((userID) => ({
+        id: userID
+      }));
+      const task = await prisma.task.create({
+        include: { users: true },
+        data: {
+          users: {
+            connect: idUser
+          },
+          name: taskInput.name,
+          description: taskInput.description,
+          projectId: taskInput.projectId
+        }
+      });
+      return task;
     },
     deleteTask: async (_: any, { taskId }: { taskId: string }) => {
       const deletedTask = await prisma.task.delete({
@@ -64,10 +64,44 @@ export default {
       _: any,
       { updateTaskInput }: { updateTaskInput: UpdateTaskInput }
     ) => {
+      const idUsers: Array<{ id: string }> = updateTaskInput.users.map(
+        (userID) => ({
+          id: userID
+        })
+      );
 
-      const idUser: Array<{ id: string }> = updateTaskInput.users.map((userID) => ({
-        id: userID
-      }));
+      const toAdd: Array<{ id: string }> = [];
+      const toDelete: Array<{ id: string }> = [];
+
+      const task = await prisma.task.findUnique({
+        where: {
+          id: updateTaskInput.taskId
+        },
+        include: {
+          users: true
+        }
+      });
+
+      /**Verify if the new users'list has new users, if so it adds them to the current list*/
+      idUsers.forEach((idUser) => {
+        if (task?.users) {
+          const currentUsers = JSON.stringify(task.users);
+          if (!currentUsers.includes(JSON.stringify(idUser))) {
+            toAdd.push(idUser);
+          }
+        }
+      });
+
+      /**Verify if the new users'list has missing users compare to the current list,
+       * if so it deletes them from the current list*/
+      task?.users.forEach((user) => {
+        if (idUsers) {
+          const newUsers = JSON.stringify(idUsers);
+          if (!newUsers.includes(JSON.stringify(user.id))) {
+            toDelete.push({id: user.id});
+          }
+        }
+      });
 
       const updatedTask = await prisma.task.update({
         where: {
@@ -76,7 +110,8 @@ export default {
         include: { users: true },
         data: {
           users: {
-            connect: idUser
+            connect: toAdd,
+            disconnect: toDelete
           },
           name: updateTaskInput.name || undefined,
           description: updateTaskInput.description || undefined,
