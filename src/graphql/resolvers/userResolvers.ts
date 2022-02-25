@@ -17,7 +17,7 @@ export default {
           role: userCreateInput.role || undefined
         }
       });
-      return { token: jwt.sign(newUser, "secretKey") };
+      return { token: jwt.sign(newUser, "secretKey"), user: newUser };
     },
     login: async (_: any, { userLoginInput }: { userLoginInput: UserLoginInput }) => {
       const loggedUser = await prisma.user.findUnique({
