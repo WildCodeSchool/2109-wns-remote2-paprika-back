@@ -45,60 +45,33 @@ export default {
       return project;
     },
     getProjectsByUser: async (_: any, _args: any, ctx: any) => {
-      //get user auth
-      // console.log(ctx.userId);
-      // const projects = await prisma.project.findMany({
-      //   where: {
-      //     deleted: false,
-      //     participants: {
-      //       every: {
-      //         user: {
-      //           id: {
-      //             equals: ctx.userId
-      //           }
-      //         }
-      //       }
-      //     }
-      //   },
-      //   include: {
-      //     tasks: true,
-      //     participants: true
-      //   }
-      // });
-
-      const userId = ctx.user; //get user auth
-      console.log(userId);
-      const projects = await prisma.userProject.findMany({
+      const userId = ctx.userId; //get user auth
+      const projects = await prisma.project.findMany({
         where: {
-          userId: userId
+          deleted: false,
+          participants: {
+            every: {
+              userId: {
+                equals: userId
+              }
+            }
+          },
+          NOT: {
+            participants: {
+              none: {}
+            }
+          }
         },
         include: {
-          user: true,
-          project: true
+          tasks: true,
+          participants: {
+            select: {
+              user: true,
+              projectRole: true
+            }
+          }
         }
       });
-
-      // const projects = await prisma.project.findMany({
-      //   where: {
-      //     deleted: false,
-      //     participants: {
-      //       every: {
-      //         userId: {
-      //           in: userId
-      //         }
-      //       }
-      //     }
-      //   },
-      //   include: {
-      //     tasks: true,
-      //     participants: {
-      //       select: {
-      //         user: true,
-      //         projectRole: true
-      //       }
-      //     }
-      //   }
-      // });
       return projects;
     },
     getProjectRoles: async () => {
