@@ -63,6 +63,7 @@ export default gql`
     priority: Priority!
     projectId: String!
     timing: String
+    users: [User]
   }
 
   input ProjectInput {

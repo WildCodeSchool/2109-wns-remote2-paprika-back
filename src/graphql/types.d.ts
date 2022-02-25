@@ -191,7 +191,6 @@ export type ProjectInput = {
   client: Scalars['String'];
   description: Scalars['String'];
   name: Scalars['String'];
-  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type ProjectRole = {

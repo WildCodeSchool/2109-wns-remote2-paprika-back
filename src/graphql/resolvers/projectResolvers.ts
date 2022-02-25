@@ -16,7 +16,11 @@ export default {
           startAt: 'desc'
         },
         include: {
-          tasks: true,
+          tasks: {
+            include:{
+              users: true
+            }
+          },
           participants: {
             select: {
               user: true,
@@ -63,7 +67,11 @@ export default {
           }
         },
         include: {
-          tasks: true,
+          tasks: {
+            include:{
+              users: true
+            }
+          },
           participants: {
             select: {
               user: true,
