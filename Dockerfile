@@ -13,4 +13,4 @@ COPY src src
 COPY tsconfig.json ./
 
 ENV DATABASE_URL=mysql://root:password@mysqldb:3306/paprika
-CMD npm start
+CMD ["npm", "start"]
