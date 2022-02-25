@@ -52,17 +52,10 @@ export type DocumentInput = {
   projectId: Scalars['String'];
 };
 
-export type File = {
-  __typename?: 'File';
-  encoding: Scalars['String'];
-  filename: Scalars['String'];
-  mimetype: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   addDocument: Document;
-  assignUsers?: Maybe<Scalars['Boolean']>;
+  assignUsersToProject?: Maybe<Scalars['Boolean']>;
   createComment: Comment;
   createProject: Project;
   createProjectRole: ProjectRole;
@@ -83,11 +76,10 @@ export type Mutation = {
 
 export type MutationAddDocumentArgs = {
   DocumentInput: DocumentInput;
-  file: Scalars['Upload'];
 };
 
 
-export type MutationAssignUsersArgs = {
+export type MutationAssignUsersToProjectArgs = {
   projectId: Scalars['String'];
   usersRoles?: InputMaybe<Array<InputMaybe<UsersRoles>>>;
 };
@@ -156,6 +148,7 @@ export type MutationUpdateDocumentArgs = {
 
 
 export type MutationUpdateProjectArgs = {
+  participantsInput?: InputMaybe<Array<InputMaybe<ParticipantsInput>>>;
   projectId: Scalars['String'];
   updateProjectInput: UpdateProjectInput;
 };
@@ -279,12 +272,14 @@ export type Task = {
   projectId: Scalars['String'];
   status: Status;
   timing?: Maybe<Scalars['String']>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type TaskInput = {
   description: Scalars['String'];
   name: Scalars['String'];
   projectId: Scalars['String'];
+  users: Array<Scalars['String']>;
 };
 
 export type UpdateProjectInput = {
@@ -303,6 +298,7 @@ export type UpdateTaskInput = {
   status?: InputMaybe<Status>;
   taskId: Scalars['String'];
   timing?: InputMaybe<Scalars['String']>;
+  users: Array<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -422,7 +418,6 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Document: ResolverTypeWrapper<Document>;
   DocumentInput: DocumentInput;
-  File: ResolverTypeWrapper<File>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
   ParticipantsInput: ParticipantsInput;
@@ -456,7 +451,6 @@ export type ResolversParentTypes = {
   Date: Scalars['Date'];
   Document: Document;
   DocumentInput: DocumentInput;
-  File: File;
   ID: Scalars['ID'];
   Mutation: {};
   ParticipantsInput: ParticipantsInput;
@@ -505,16 +499,9 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
-  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput' | 'file'>>;
-  assignUsers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAssignUsersArgs, 'projectId'>>;
+  addDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationAddDocumentArgs, 'DocumentInput'>>;
+  assignUsersToProject?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationAssignUsersToProjectArgs, 'projectId'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'commentInput'>>;
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'projectInput'>>;
   createProjectRole?: Resolver<ResolversTypes['ProjectRole'], ParentType, ContextType, RequireFields<MutationCreateProjectRoleArgs, 'roleName'>>;
@@ -574,6 +561,7 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   projectId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
   timing?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -602,7 +590,6 @@ export type Resolvers<ContextType = any> = {
   Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Document?: DocumentResolvers<ContextType>;
-  File?: FileResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   ProjectRole?: ProjectRoleResolvers<ContextType>;
