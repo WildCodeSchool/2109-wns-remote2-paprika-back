@@ -69,7 +69,6 @@ export default gql`
     name: String!
     client: String!
     description: String!
-    userId: String
   }
 
   input UpdateProjectInput {

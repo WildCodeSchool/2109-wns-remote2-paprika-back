@@ -12,9 +12,11 @@ const runServer = () => {
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    context: () => {
+    context: ({ req }) => {
+      const userId = req.headers.authorization || '';
       return {
-        prisma
+        prisma,
+        userId
       };
     }
   });

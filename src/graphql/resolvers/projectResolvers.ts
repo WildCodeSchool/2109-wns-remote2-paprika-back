@@ -44,15 +44,21 @@ export default {
       });
       return project;
     },
-    getProjectsByUser: async () => {
-      //TODO get auth user
-      const userId = '3325c924-3ae5-4507-95c7-819414850f29'; //get user auth
+    getProjectsByUser: async (_: any, _args: any, ctx: any) => {
+      const userId = ctx.userId; //get user auth
       const projects = await prisma.project.findMany({
         where: {
           deleted: false,
           participants: {
             every: {
-              userId: userId
+              userId: {
+                equals: userId
+              }
+            }
+          },
+          NOT: {
+            participants: {
+              none: {}
             }
           }
         },
@@ -199,18 +205,24 @@ export default {
 };
 
 const generateUserRole = (participants: ParticipantsInput[]) => {
-  return participants.map((user) => ({
-    userId: user.userId,
-    projectRoleId: user.projectRoleId
-  }));
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectRoleId: user.projectRoleId
+    }));
+
+  return [];
 };
 
 const generateUserProject = (
   participants: ParticipantsInput[],
   projectId: string
 ) => {
-  return participants.map((user) => ({
-    userId: user.userId,
-    projectId: projectId
-  }));
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectId: projectId
+    }));
+
+  return [];
 };
