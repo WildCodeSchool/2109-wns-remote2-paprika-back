@@ -44,28 +44,61 @@ export default {
       });
       return project;
     },
-    getProjectsByUser: async () => {
-      //TODO get auth user
-      const userId = '3325c924-3ae5-4507-95c7-819414850f29'; //get user auth
-      const projects = await prisma.project.findMany({
+    getProjectsByUser: async (_: any, _args: any, ctx: any) => {
+      //get user auth
+      // console.log(ctx.userId);
+      // const projects = await prisma.project.findMany({
+      //   where: {
+      //     deleted: false,
+      //     participants: {
+      //       every: {
+      //         user: {
+      //           id: {
+      //             equals: ctx.userId
+      //           }
+      //         }
+      //       }
+      //     }
+      //   },
+      //   include: {
+      //     tasks: true,
+      //     participants: true
+      //   }
+      // });
+
+      const userId = ctx.user; //get user auth
+      console.log(userId);
+      const projects = await prisma.userProject.findMany({
         where: {
-          deleted: false,
-          participants: {
-            every: {
-              userId: userId
-            }
-          }
+          userId: userId
         },
         include: {
-          tasks: true,
-          participants: {
-            select: {
-              user: true,
-              projectRole: true
-            }
-          }
+          user: true,
+          project: true
         }
       });
+
+      // const projects = await prisma.project.findMany({
+      //   where: {
+      //     deleted: false,
+      //     participants: {
+      //       every: {
+      //         userId: {
+      //           in: userId
+      //         }
+      //       }
+      //     }
+      //   },
+      //   include: {
+      //     tasks: true,
+      //     participants: {
+      //       select: {
+      //         user: true,
+      //         projectRole: true
+      //       }
+      //     }
+      //   }
+      // });
       return projects;
     },
     getProjectRoles: async () => {
@@ -199,18 +232,24 @@ export default {
 };
 
 const generateUserRole = (participants: ParticipantsInput[]) => {
-  return participants.map((user) => ({
-    userId: user.userId,
-    projectRoleId: user.projectRoleId
-  }));
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectRoleId: user.projectRoleId
+    }));
+
+  return [];
 };
 
 const generateUserProject = (
   participants: ParticipantsInput[],
   projectId: string
 ) => {
-  return participants.map((user) => ({
-    userId: user.userId,
-    projectId: projectId
-  }));
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectId: projectId
+    }));
+
+  return [];
 };
