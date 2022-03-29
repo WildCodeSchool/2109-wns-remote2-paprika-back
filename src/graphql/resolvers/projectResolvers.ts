@@ -17,7 +17,7 @@ export default {
         },
         include: {
           tasks: {
-            include:{
+            include: {
               users: true
             }
           },
@@ -50,37 +50,59 @@ export default {
     },
     getProjectsByUser: async (_: any, _args: any, ctx: any) => {
       const userId = ctx.userId; //get user auth
-      const projects = await prisma.project.findMany({
-        where: {
-          deleted: false,
-          participants: {
-            every: {
-              userId: {
-                equals: userId
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new Error("Pas d'utilisateur");
+      else if (user.role === 'PO') {
+        const projects = prisma.project.findMany({
+          where: { deleted: false },
+          include: {
+            tasks: {
+              include: {
+                users: true
+              }
+            },
+            participants: {
+              select: {
+                user: true,
+                projectRole: true
+              }
+            }
+          }
+        });
+        return projects;
+      } else {
+        const projects = await prisma.project.findMany({
+          where: {
+            deleted: false,
+            participants: {
+              every: {
+                userId: {
+                  equals: userId
+                }
+              }
+            },
+            NOT: {
+              participants: {
+                none: {}
               }
             }
           },
-          NOT: {
+          include: {
+            tasks: {
+              include: {
+                users: true
+              }
+            },
             participants: {
-              none: {}
+              select: {
+                user: true,
+                projectRole: true
+              }
             }
           }
-        },
-        include: {
-          tasks: {
-            include:{
-              users: true
-            }
-          },
-          participants: {
-            select: {
-              user: true,
-              projectRole: true
-            }
-          }
-        }
-      });
-      return projects;
+        });
+        return projects;
+      }
     },
     getProjectRoles: async () => {
       const roles = await prisma.projectRole.findMany();
