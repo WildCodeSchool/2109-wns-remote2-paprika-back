@@ -19,12 +19,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: melissakintz/paprika-back:latest
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t melissakintz/paprika-back --push .
   start-app:
     needs: docker
     runs-on: ubuntu-latest
