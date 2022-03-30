@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM --platform=$BUILDPLATFORM node:lts-alpine AS build
 
 RUN mkdir /paprika-back
 WORKDIR /paprika-back
