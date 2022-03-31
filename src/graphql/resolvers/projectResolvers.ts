@@ -49,7 +49,7 @@ export default {
       return project;
     },
     getProjectsByUser: async (_: any, _args: any, ctx: any) => {
-      const userId = ctx.userId; //get user auth
+      const userId = ctx.user.id; //get user auth
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) throw new Error("Pas d'utilisateur");
       else if (user.role === 'PO') {
