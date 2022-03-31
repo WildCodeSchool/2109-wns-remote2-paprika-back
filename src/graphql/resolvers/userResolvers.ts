@@ -38,10 +38,10 @@ export default {
       });
       return !!deletedUser;
     },
-    updateUser: async (_: any, { updateUserInput }: { updateUserInput: UpdateUserInput }) => {
+    updateUser: async (_: any, { updateUserInput }: { updateUserInput: UpdateUserInput }, ctx: any) => {
       const updatedUser = await prisma.user.update({
         where: {
-          id: updateUserInput.userId
+          id: ctx !== null ? ctx.user.id : updateUserInput.userId
         },
         data: {
           firstName: updateUserInput.firstName || undefined,
@@ -65,7 +65,7 @@ export default {
       });
       return user;
     },
-    getCurrentUser: async (_:any, args:any, context: any ) => {
+    getCurrentUser: async (_: any, args: any, context: any) => {
       return context.user;
     }
   }
