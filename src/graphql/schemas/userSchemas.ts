@@ -4,6 +4,7 @@ export default gql`
     type Query {
         getAllUsers: [User!]!
         getUser(userId: String!): User!
+        getCurrentUser: User
     }
 
     type Mutation {
@@ -12,7 +13,7 @@ export default gql`
         deleteUser(userId: String!): Boolean
         updateUser(updateUserInput: UpdateUserInput!): User!
     }
-
+ 
     type User {
         id: ID!
         email: String!

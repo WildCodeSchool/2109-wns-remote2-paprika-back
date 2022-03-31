@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server';
 import * as dotenv from 'dotenv';
 import resolvers from './graphql/resolvers/resolvers';
 import typeDefs from './graphql/schemas/typeDefs';
+import getUser from './userContext';
 
 dotenv.config();
 
@@ -12,11 +13,11 @@ const runServer = () => {
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    context: ({ req }) => {
-      const userId = req.headers.authorization || '';
+    context: async ({req}) => {
+      const user = await getUser(req.headers.authorization);
       return {
         prisma,
-        userId
+        user
       };
     }
   });

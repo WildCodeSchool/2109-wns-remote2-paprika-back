@@ -16,12 +16,21 @@ export default gql`
     id: ID!
     content: String!
     createdAt: Date!
-    userId: String!
+    user: User
     taskId: String!
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    lastName: String!
+    firstName: String!
+    role: RoleSite!
   }
 
   input CommentInput {
     content: String!
     taskId: String!
+    userId: String!
   }
 `;
