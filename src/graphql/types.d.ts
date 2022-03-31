@@ -31,12 +31,13 @@ export type Comment = {
   createdAt: Scalars['Date'];
   id: Scalars['ID'];
   taskId: Scalars['String'];
-  userId: Scalars['String'];
+  user?: Maybe<User>;
 };
 
 export type CommentInput = {
   content: Scalars['String'];
   taskId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type Document = {
@@ -206,6 +207,7 @@ export type Query = {
   getAllTasks: Array<Task>;
   getAllUsers: Array<User>;
   getCommentsByTask: Array<Comment>;
+  getCurrentUser?: Maybe<User>;
   getDocumentById?: Maybe<Document>;
   getProjectById: Project;
   getProjectRoles: Array<Maybe<ProjectRole>>;
@@ -482,7 +484,7 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   taskId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -543,6 +545,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAllTasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   getCommentsByTask?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByTaskArgs, 'taskId'>>;
+  getCurrentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   getDocumentById?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentByIdArgs, 'docId'>>;
   getProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryGetProjectByIdArgs, 'projectId'>>;
   getProjectRoles?: Resolver<Array<Maybe<ResolversTypes['ProjectRole']>>, ParentType, ContextType>;

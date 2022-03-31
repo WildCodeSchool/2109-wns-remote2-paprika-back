@@ -64,6 +64,9 @@ export default {
         }
       });
       return user;
+    },
+    getCurrentUser: async (_:any, args:any, context: any ) => {
+      return context.user;
     }
   }
 };
