@@ -13,7 +13,7 @@ const runServer = () => {
     resolvers,
     typeDefs,
     context: async ({ req }) => {
-      const user = await getUser(req.headers.authorization);
+      const user = await getUser(req.headers.Authorization);
       return {
         prisma,
         user

@@ -14,7 +14,7 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./src/:/melissakintz/paprika-back/src/
+      - ./src/:/paprika-back/src/
     restart: always
     links:
       - mysqldb

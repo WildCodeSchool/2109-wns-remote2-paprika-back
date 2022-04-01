@@ -51,7 +51,6 @@ export default {
     },
     getProjectsByUser: async (_: any, _args: any, ctx: any) => {
       const user: User | null = ctx.user;
-      console.log(ctx.user);
       if (!user) throw new Error("Pas d'utilisateur");
       else if (user.role === 'PO') {
         const projects = prisma.project.findMany({
