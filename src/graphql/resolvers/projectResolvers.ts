@@ -1,6 +1,7 @@
 import { PrismaClient } from '.prisma/client';
 import dateScalar from '../scalars';
 import { ParticipantsInput, ProjectInput, UpdateProjectInput } from '../types';
+import { User } from './../types.d';
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,7 @@ export default {
       return project;
     },
     getProjectsByUser: async (_: any, _args: any, ctx: any) => {
-      const user = ctx.user;
+      const user: User | null = ctx.user;
       console.log(ctx.user);
       if (!user) throw new Error("Pas d'utilisateur");
       else if (user.role === 'PO') {
