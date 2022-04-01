@@ -76,7 +76,7 @@ export default {
             participants: {
               every: {
                 userId: {
-                  equals: userId
+                  equals: user.id
                 }
               }
             },
