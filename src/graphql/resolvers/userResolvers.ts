@@ -7,7 +7,10 @@ const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    register: async (_: any, { userCreateInput }: { userCreateInput: UserCreateInput }) => {
+    register: async (
+      _: any,
+      { userCreateInput }: { userCreateInput: UserCreateInput }
+    ) => {
       const newUser = await prisma.user.create({
         data: {
           email: userCreateInput.email,
@@ -17,18 +20,24 @@ export default {
           role: userCreateInput.role || undefined
         }
       });
-      return { token: jwt.sign(newUser, "secretKey"), user: newUser };
+      return { token: jwt.sign(newUser, 'secretKey'), user: newUser };
     },
-    login: async (_: any, { userLoginInput }: { userLoginInput: UserLoginInput }) => {
+    login: async (
+      _: any,
+      { userLoginInput }: { userLoginInput: UserLoginInput }
+    ) => {
       const loggedUser = await prisma.user.findUnique({
         where: {
           email: userLoginInput.email
         }
-      })
+      });
       if (!loggedUser) throw new Error('Unable to Login');
-      const isMatch = bcrypt.compareSync(userLoginInput.password, loggedUser.password);
+      const isMatch = bcrypt.compareSync(
+        userLoginInput.password,
+        loggedUser.password
+      );
       if (!isMatch) throw new Error('Unable to Login');
-      return { token: jwt.sign(loggedUser, "secretKey"), user: loggedUser };
+      return { token: jwt.sign(loggedUser, 'secretKey'), user: loggedUser };
     },
     deleteUser: async (_: any, { userId }: { userId: string }) => {
       const deletedUser = await prisma.user.delete({
@@ -38,7 +47,11 @@ export default {
       });
       return !!deletedUser;
     },
-    updateUser: async (_: any, { updateUserInput }: { updateUserInput: UpdateUserInput }, ctx: any) => {
+    updateUser: async (
+      _: any,
+      { updateUserInput }: { updateUserInput: UpdateUserInput },
+      ctx: any
+    ) => {
       const updatedUser = await prisma.user.update({
         where: {
           id: ctx !== null ? ctx.user.id : updateUserInput.userId
@@ -48,7 +61,7 @@ export default {
           lastName: updateUserInput.lastName || undefined,
           role: updateUserInput.role || undefined
         }
-      })
+      });
       return updatedUser;
     }
   },
@@ -65,7 +78,7 @@ export default {
       });
       return user;
     },
-    getCurrentUser: async (_: any, args: any, context: any) => {
+    getCurrentUser: async (_: any, _args: any, context: any) => {
       return context.user;
     }
   }
