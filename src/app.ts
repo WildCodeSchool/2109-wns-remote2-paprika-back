@@ -9,12 +9,11 @@ dotenv.config();
 
 const runServer = () => {
   const prisma = new PrismaClient();
-
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    context: async ({req}) => {
-      const user = await getUser(req.headers.authorization);
+    context: async ({ req }) => {
+      const user = await getUser(req.headers.Authorization);
       return {
         prisma,
         user

@@ -22,12 +22,14 @@ export default {
   Mutation: {
     createComment: async (
       _: any,
-      { commentInput }: { commentInput: CommentInput }
+      { commentInput }: { commentInput: CommentInput },
+      ctx: any
     ) => {
+      const { user } = ctx;
       return await prisma.comment.create({
         data: {
           content: commentInput.content,
-          userId: commentInput.userId,
+          userId: user.id,
           taskId: commentInput.taskId
         },
         include: { user: true }
