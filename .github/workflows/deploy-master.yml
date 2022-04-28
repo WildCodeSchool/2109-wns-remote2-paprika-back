@@ -22,4 +22,4 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Build and push
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t melissakintz/paprika-back-staging --push .
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t melissakintz/paprika-back --push .
