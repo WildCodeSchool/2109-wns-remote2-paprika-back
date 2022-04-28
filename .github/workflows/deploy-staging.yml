@@ -1,4 +1,4 @@
-name: deploy-master
+name: deploy-staging
 
 on:
   push:
