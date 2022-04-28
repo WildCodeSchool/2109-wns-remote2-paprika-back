@@ -9,7 +9,7 @@ export default gql`
   }
 
   type Mutation {
-    addDocument(DocumentInput: DocumentInput!, file: Upload!): Document!
+    addDocument(DocumentInput: DocumentInput!): Document!
     deleteDocument(docId: String!): Document!
     updateDocument(docId: String!, newName: String!): Document!
   }
@@ -19,12 +19,6 @@ export default gql`
     name: String!
     fileName: String!
     projectId: String!
-  }
-
-  type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
   }
 
   input DocumentInput {

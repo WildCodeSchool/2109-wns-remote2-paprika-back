@@ -3,23 +3,24 @@ import { ApolloServer } from 'apollo-server';
 import * as dotenv from 'dotenv';
 import resolvers from './graphql/resolvers/resolvers';
 import typeDefs from './graphql/schemas/typeDefs';
-import generateFileName from './services/generateFileName';
+import getUser from './userContext';
 
 dotenv.config();
 
 const runServer = () => {
   const prisma = new PrismaClient();
-
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    context: () => {
+    context: async ({ req }) => {
+      const user = await getUser(req.headers.Authorization);
       return {
-        prisma
+        prisma,
+        user
       };
     }
   });
-  
+
   server.listen(4000, () => {
     console.log(
       `🚀 Server ready at http://localhost:4000${server.graphqlPath}`

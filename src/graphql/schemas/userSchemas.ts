@@ -4,11 +4,12 @@ export default gql`
   type Query {
     getAllUsers: [User!]!
     getUser(userId: String!): User!
+    getCurrentUser: User
   }
 
   type Mutation {
-    register(userInput: UserInput!): User!
-    login(loginUserInput: LoginUserInput!): LoginResponse!
+    register(userCreateInput: UserCreateInput!): AuthPayLoad!
+    login(userLoginInput: UserLoginInput!): AuthPayLoad!
     deleteUser(userId: String!): Boolean
     updateUser(updateUserInput: UpdateUserInput!): User!
   }
@@ -19,21 +20,23 @@ export default gql`
     lastName: String!
     firstName: String!
     role: RoleSite
-  }
-
-  type LoginResponse {
-    token: String
-    user: User
-  }
-
-  input UserInput {
-    email: String!
     password: String!
+  }
+
+  type AuthPayLoad {
+    token: String!
+    user: User!
+  }
+
+  input UserCreateInput {
+    email: String!
     lastName: String!
     firstName: String!
+    role: RoleSite
+    password: String!
   }
 
-  input LoginUserInput {
+  input UserLoginInput {
     email: String!
     password: String!
   }

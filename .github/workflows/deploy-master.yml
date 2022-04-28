@@ -1,7 +1,10 @@
-name: check-validity-start
+name: deploy-master
 
-on: 
-  pull_request
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   docker:
@@ -19,18 +22,4 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: melissakintz/paprika-back:latest
-  start-app:
-    needs: docker
-    runs-on: ubuntu-latest
-    steps: 
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: up
-        run: docker-compose up -d
-      - name: down
-        run: docker-compose down
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t melissakintz/paprika-back --push .

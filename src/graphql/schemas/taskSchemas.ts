@@ -20,12 +20,22 @@ export default gql`
     priority: Priority!
     projectId: String!
     timing: String
+    users: [User]
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    lastName: String!
+    firstName: String!
+    role: RoleSite
   }
 
   input TaskInput {
     name: String!
     description: String!
     projectId: String!
+    users: [String!]!
   }
 
   input UpdateTaskInput {
@@ -36,6 +46,7 @@ export default gql`
     status: Status
     priority: Priority
     timing: String
+    users: [String!]!
   }
 
   enum Status {

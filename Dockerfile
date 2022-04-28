@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM --platform=$BUILDPLATFORM node:lts-alpine AS build
 
 RUN mkdir /paprika-back
 WORKDIR /paprika-back
@@ -13,4 +13,4 @@ COPY src src
 COPY tsconfig.json ./
 
 ENV DATABASE_URL=mysql://root:password@mysqldb:3306/paprika
-CMD npm start
+CMD ["npm", "start"]

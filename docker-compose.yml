@@ -1,11 +1,11 @@
 services:
   front:
-    image: enrgy057/paprika-front
+    image: wonecode/paprika-front
     ports:
       - 3000:3000
     volumes:
-      - ./src/:/enrgy057/paprika-front/src/
-      - ./public/:/enrgy057/paprika-front/public/
+      - ./src/:/wonecode/paprika-front/src/
+      - ./public/:/wonecode/paprika-front/public/
     depends_on:
       back:
         condition: service_started
@@ -15,6 +15,7 @@ services:
       - 4000:4000
     volumes:
       - ./src/:/paprika-back/src/
+    restart: always
     links:
       - mysqldb
     depends_on:
@@ -23,7 +24,7 @@ services:
   mysqldb:
     image: mysql
     healthcheck:
-      test: "exit 0"
+      test: 'exit 0'
     restart: always
     environment:
       MYSQL_DATABASE: paprika

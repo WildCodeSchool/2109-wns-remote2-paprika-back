@@ -11,8 +11,9 @@ export default {
     getCommentsByTask: async (_: any, { taskId }: { taskId: string }) => {
       const comments = await prisma.comment.findMany({
         where: {
-          id: taskId
-        }
+          taskId: taskId
+        },
+        include: { user: true }
       });
 
       return comments;
@@ -21,14 +22,17 @@ export default {
   Mutation: {
     createComment: async (
       _: any,
-      { commentInput }: { commentInput: CommentInput }
+      { commentInput }: { commentInput: CommentInput },
+      ctx: any
     ) => {
+      const { user } = ctx;
       return await prisma.comment.create({
         data: {
           content: commentInput.content,
-          userId: '0e520791-387c-4748-8d52-af1522d013a3',
+          userId: user.id,
           taskId: commentInput.taskId
-        }
+        },
+        include: { user: true }
       });
     },
     deleteComment: async ({ commentId }: { commentId: string }) => {

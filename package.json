@@ -7,8 +7,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "start": "tsc && npx prisma migrate dev && nodemon dist/src/app.js",
-    "start:dev": "tsc && nodemon dist/src/app.js",
+    "start": "npx prisma migrate dev && tsc && nodemon -L ./src/app.ts",
     "test": "jest -i",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -43,12 +42,12 @@
     "jest-mock-extended": "^2.0.4",
     "nodemon": "^2.0.15",
     "prettier": "2.4.1",
-    "prisma": "^3.5.0",
+    "prisma": "^3.10.0",
     "ts-jest": "^27.1.3",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@prisma/client": "^3.5.0",
+    "@prisma/client": "^3.10.0",
     "@types/faker": "^5.5.9",
     "apollo-server": "^3.5.0",
     "bcryptjs": "^2.4.3",

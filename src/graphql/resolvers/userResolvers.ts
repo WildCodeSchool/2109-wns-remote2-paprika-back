@@ -1,54 +1,43 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { LoginUserInput, UpdateUserInput, UserInput } from '../types';
+import { UpdateUserInput, UserCreateInput, UserLoginInput } from '../types';
 
 const prisma = new PrismaClient();
 
 export default {
   Mutation: {
-    register: async (_: any, { userInput }: { userInput: UserInput }) => {
-      const hashedPassword = await bcrypt.hash(userInput.password, 10);
-      const user = await prisma.user.create({
+    register: async (
+      _: any,
+      { userCreateInput }: { userCreateInput: UserCreateInput }
+    ) => {
+      const newUser = await prisma.user.create({
         data: {
-          password: hashedPassword,
-          email: userInput.email,
-          firstName: userInput.firstName,
-          lastName: userInput.lastName
+          email: userCreateInput.email,
+          firstName: userCreateInput.firstName,
+          lastName: userCreateInput.lastName,
+          password: bcrypt.hashSync(userCreateInput.password, 3),
+          role: userCreateInput.role || undefined
         }
       });
-      return user;
+      return { token: jwt.sign(newUser, 'secretKey'), user: newUser };
     },
     login: async (
       _: any,
-      { loginUserInput }: { loginUserInput: LoginUserInput }
+      { userLoginInput }: { userLoginInput: UserLoginInput }
     ) => {
-      const user = await prisma.user.findUnique({
+      const loggedUser = await prisma.user.findUnique({
         where: {
-          email: loginUserInput.email
+          email: userLoginInput.email
         }
       });
-      if (!user) {
-        throw new Error('Invalid login');
-      }
-      const passwordMatch = await bcrypt.compare(
-        loginUserInput.password,
-        user.password
+      if (!loggedUser) throw new Error('Unable to Login');
+      const isMatch = bcrypt.compareSync(
+        userLoginInput.password,
+        loggedUser.password
       );
-      if (!passwordMatch) {
-        throw new Error('Invalid login');
-      }
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email
-        },
-        process.env.JWT_SECRET as string,
-        {
-          expiresIn: '1d'
-        }
-      );
-      return { user, token };
+      if (!isMatch) throw new Error('Unable to Login');
+      return { token: jwt.sign(loggedUser, 'secretKey'), user: loggedUser };
     },
     deleteUser: async (_: any, { userId }: { userId: string }) => {
       const deletedUser = await prisma.user.delete({
@@ -60,11 +49,12 @@ export default {
     },
     updateUser: async (
       _: any,
-      { updateUserInput }: { updateUserInput: UpdateUserInput }
+      { updateUserInput }: { updateUserInput: UpdateUserInput },
+      ctx: any
     ) => {
       const updatedUser = await prisma.user.update({
         where: {
-          id: updateUserInput.userId
+          id: ctx !== null ? ctx.user.id : updateUserInput.userId
         },
         data: {
           firstName: updateUserInput.firstName || undefined,
@@ -73,7 +63,7 @@ export default {
         }
       });
       return updatedUser;
-    },
+    }
   },
   Query: {
     getAllUsers: async () => {
@@ -87,6 +77,9 @@ export default {
         }
       });
       return user;
+    },
+    getCurrentUser: async (_: any, _args: any, context: any) => {
+      return context.user;
     }
   }
 };

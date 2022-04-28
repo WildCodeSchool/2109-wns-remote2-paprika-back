@@ -11,14 +11,18 @@ export default gql`
   }
 
   type Mutation {
-    createProject(projectInput: ProjectInput!): Project!
+    createProject(
+      projectInput: ProjectInput!
+      participantsInput: [ParticipantsInput]
+    ): Project!
     deleteProject(projectId: String!): Boolean
     updateProject(
       projectId: String!
       updateProjectInput: UpdateProjectInput!
+      participantsInput: [ParticipantsInput]
     ): Project!
     createProjectRole(roleName: String!): ProjectRole!
-    assignUsers(projectId: String!, usersRoles: [UsersRoles]): Boolean
+    assignUsersToProject(projectId: String!, usersRoles: [UsersRoles]): Boolean
   }
 
   type Project {
@@ -28,6 +32,38 @@ export default gql`
     name: String!
     client: String!
     description: String!
+    deleted: Boolean!
+    tasks: [Task]
+    participants: [UserProject]
+  }
+
+  type UserProject {
+    user: User
+    projectRole: ProjectRole
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    lastName: String!
+    firstName: String!
+    role: RoleSite!
+  }
+
+  type ProjectRole {
+    id: ID!
+    name: String!
+  }
+
+  type Task {
+    id: ID!
+    name: String!
+    description: String!
+    status: Status!
+    priority: Priority!
+    projectId: String!
+    timing: String
+    users: [User]
   }
 
   input ProjectInput {
@@ -52,5 +88,10 @@ export default gql`
   input UsersRoles {
     userId: String!
     roleId: String!
+  }
+
+  input ParticipantsInput {
+    userId: String!
+    projectRoleId: String!
   }
 `;
