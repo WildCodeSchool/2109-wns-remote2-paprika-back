@@ -3,5 +3,6 @@
 /dist
 package-lock.json
 data
+.DS_Store
 
 !.env.sample
