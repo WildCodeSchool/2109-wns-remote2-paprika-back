@@ -13,7 +13,9 @@ const runServer = () => {
     resolvers,
     typeDefs,
     context: async ({ req }) => {
-      const user = await getUser(req.headers.Authorization);
+      let user = null;
+      if (req.headers.authorization?.includes('Bearer'))
+        user = await getUser(req.headers.authorization);
       return {
         prisma,
         user
