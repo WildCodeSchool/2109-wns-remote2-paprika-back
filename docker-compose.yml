@@ -1,20 +1,21 @@
 services:
   front:
-    image: wonecode/paprika-front
+    image: wonecode/paprika-front-staging
     ports:
       - 3000:3000
     volumes:
-      - ./src/:/wonecode/paprika-front/src/
-      - ./public/:/wonecode/paprika-front/public/
+      - ./src/:/wonecode/paprika-front-staging/src/
+      - ./public/:/wonecode/paprika-front-staging/public/
     depends_on:
       back:
         condition: service_started
+    command: npm start
   back:
-    image: melissakintz/paprika-back
+    image: melissakintz/paprika-back-staging
     ports:
       - 4000:4000
     volumes:
-      - ./src/:/paprika-back/src/
+      - ./src/:/paprika-back-staging/src/
     restart: always
     links:
       - mysqldb

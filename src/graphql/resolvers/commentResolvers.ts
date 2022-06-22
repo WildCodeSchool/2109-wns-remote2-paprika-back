@@ -1,6 +1,6 @@
 import { PrismaClient } from '.prisma/client';
 import dateScalar from '../scalars';
-import { CommentInput } from '../types';
+import { CommentInput, User } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -8,10 +8,10 @@ export default {
   Date: dateScalar,
 
   Query: {
-    getCommentsByTask: async (_: any, { taskId }: { taskId: string }) => {
+    getCommentsByTask: async (_: undefined, { taskId }: { taskId: string }) => {
       const comments = await prisma.comment.findMany({
         where: {
-          taskId: taskId
+          taskId
         },
         include: { user: true }
       });
@@ -21,9 +21,9 @@ export default {
   },
   Mutation: {
     createComment: async (
-      _: any,
+      _: undefined,
       { commentInput }: { commentInput: CommentInput },
-      ctx: any
+      ctx: { user: User; prisma: PrismaClient }
     ) => {
       const { user } = ctx;
       return await prisma.comment.create({
@@ -35,12 +35,11 @@ export default {
         include: { user: true }
       });
     },
-    deleteComment: async ({ commentId }: { commentId: string }) => {
-      return !!(await prisma.comment.delete({
+    deleteComment: async ({ commentId }: { commentId: string }) =>
+      !!(await prisma.comment.delete({
         where: {
           id: commentId
         }
-      }));
-    }
+      }))
   }
 };

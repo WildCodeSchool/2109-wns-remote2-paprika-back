@@ -10,6 +10,7 @@
     "start": "npx prisma migrate dev && tsc && nodemon -L ./src/app.ts",
     "test": "jest -i",
     "lint": "eslint . --ext .ts",
+    "compile": "tsc",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "db:migration": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
@@ -29,8 +30,8 @@
     "@types/graphql-upload": "^8.0.10",
     "@types/jest": "^27.4.0",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -40,11 +41,12 @@
     "faker": "^5.5.3",
     "jest": "^27.4.7",
     "jest-mock-extended": "^2.0.4",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.16",
     "prettier": "2.4.1",
     "prisma": "^3.10.0",
     "ts-jest": "^27.1.3",
-    "typescript": "^4.5.5"
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",

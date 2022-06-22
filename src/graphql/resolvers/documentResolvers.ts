@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import generateFileName from '../../services/generateFileName';
 import dateScalar from '../scalars';
-import { DocumentInput } from './../types.d';
+import { DocumentInput } from '../types.d';
 
 const prisma = new PrismaClient();
 
@@ -12,22 +12,28 @@ export default {
   Upload: GraphQLUpload,
   Query: {
     getAllDocumentsByProject: async (
-      _: any,
+      _: undefined,
       { projectId }: { projectId: string }
     ) => {
       const documents = await prisma.document.findMany({
-        where: { projectId: projectId }
+        where: { projectId }
       });
       return documents;
     },
-    getDocumentById: async (_: any, { docId }: { docId: string }) => {
-      return await prisma.document.findUnique({ where: { id: docId } });
+    getDocumentById: async (_: undefined, { docId }: { docId: string }) => {
+      const document = await prisma.document.findUnique({
+        where: { id: docId }
+      });
+      return document;
     }
   },
   Mutation: {
     addDocument: async (
-      _: any,
-      { documentInput, file }: { documentInput: DocumentInput, file: FileUpload }
+      _: undefined,
+      {
+        documentInput,
+        file
+      }: { documentInput: DocumentInput; file: FileUpload }
     ) => {
       // save file in uploadedFiles
       const { createReadStream, filename } = await file;
@@ -49,8 +55,8 @@ export default {
 
       return newDocument;
     },
-    deleteDocument: async (_: any, { docId }: { docId: string }) => {
-      //delete in project
+    deleteDocument: async (_: undefined, { docId }: { docId: string }) => {
+      // delete in project
       const fileName = await prisma.document.findUnique({
         where: { id: docId }
       });
@@ -63,17 +69,16 @@ export default {
       });
     },
     updateDocument: async (
-      _: any,
+      _: undefined,
       { docId, newName }: { docId: string; newName: string }
-    ) => {
-      return await prisma.project.update({
+    ) =>
+      await prisma.project.update({
         where: {
           id: docId
         },
         data: {
           name: newName
         }
-      });
-    }
+      })
   }
 };

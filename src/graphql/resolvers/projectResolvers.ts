@@ -1,9 +1,36 @@
 import { PrismaClient } from '.prisma/client';
 import dateScalar from '../scalars';
-import { ParticipantsInput, ProjectInput, UpdateProjectInput } from '../types';
-import { User } from './../types.d';
+import {
+  ParticipantsInput,
+  ProjectInput,
+  UpdateProjectInput,
+  User
+} from '../types';
 
 const prisma = new PrismaClient();
+
+const generateUserRole = (participants: ParticipantsInput[]) => {
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectRoleId: user.projectRoleId
+    }));
+
+  return [];
+};
+
+const generateUserProject = (
+  participants: ParticipantsInput[],
+  projectId: string
+) => {
+  if (participants)
+    return participants.map((user) => ({
+      userId: user.userId,
+      projectId
+    }));
+
+  return [];
+};
 
 export default {
   Date: dateScalar,
@@ -32,7 +59,10 @@ export default {
       });
       return projects;
     },
-    getProjectById: async (_: any, { projectId }: { projectId: string }) => {
+    getProjectById: async (
+      _: undefined,
+      { projectId }: { projectId: string }
+    ) => {
       const project = await prisma.project.findUnique({
         where: {
           id: projectId
@@ -49,8 +79,12 @@ export default {
       });
       return project;
     },
-    getProjectsByUser: async (_: any, _args: any, ctx: any) => {
-      const user: User | null = ctx.user;
+    getProjectsByUser: async (
+      _: undefined,
+      _args: undefined,
+      ctx: { user: User; prisma: PrismaClient }
+    ) => {
+      const { user } = ctx;
       if (!user) throw new Error("Pas d'utilisateur");
       else if (user.role === 'PO') {
         const projects = prisma.project.findMany({
@@ -112,7 +146,7 @@ export default {
 
   Mutation: {
     createProject: async (
-      _: any,
+      _: undefined,
       {
         projectInput,
         participantsInput
@@ -120,7 +154,7 @@ export default {
     ) => {
       const participants = generateUserRole(participantsInput);
 
-      return await prisma.project.create({
+      const project = await prisma.project.create({
         data: {
           name: projectInput.name,
           client: projectInput.client,
@@ -140,8 +174,13 @@ export default {
           }
         }
       });
+
+      return project;
     },
-    deleteProject: async (_: any, { projectId }: { projectId: string }) => {
+    deleteProject: async (
+      _: undefined,
+      { projectId }: { projectId: string }
+    ) => {
       const deleted = await prisma.project.update({
         where: {
           id: projectId
@@ -153,7 +192,7 @@ export default {
       return !!deleted;
     },
     updateProject: async (
-      _: any,
+      _: undefined,
       {
         projectId,
         updateProjectInput,
@@ -192,14 +231,17 @@ export default {
           create: {
             userId: user.userId,
             projectRoleId: user.projectRoleId,
-            projectId: projectId
+            projectId
           }
         });
       });
 
       return project;
     },
-    createProjectRole: async (_: any, { roleName }: { roleName: string }) => {
+    createProjectRole: async (
+      _: undefined,
+      { roleName }: { roleName: string }
+    ) => {
       const role = await prisma.projectRole.create({
         data: {
           name: roleName
@@ -208,7 +250,7 @@ export default {
       return role;
     },
     assignUsersToProject: async (
-      _: any,
+      _: undefined,
       {
         projectId,
         usersRoles
@@ -221,7 +263,7 @@ export default {
         usersRoles.forEach(async (user) => {
           await prisma.userProject.upsert({
             where: {
-              userId_projectId: { userId: user.userId, projectId: projectId }
+              userId_projectId: { userId: user.userId, projectId }
             },
             update: {
               projectRoleId: user.roleId
@@ -229,7 +271,7 @@ export default {
             create: {
               userId: user.userId,
               projectRoleId: user.roleId,
-              projectId: projectId
+              projectId
             }
           });
         });
@@ -239,27 +281,4 @@ export default {
       }
     }
   }
-};
-
-const generateUserRole = (participants: ParticipantsInput[]) => {
-  if (participants)
-    return participants.map((user) => ({
-      userId: user.userId,
-      projectRoleId: user.projectRoleId
-    }));
-
-  return [];
-};
-
-const generateUserProject = (
-  participants: ParticipantsInput[],
-  projectId: string
-) => {
-  if (participants)
-    return participants.map((user) => ({
-      userId: user.userId,
-      projectId: projectId
-    }));
-
-  return [];
 };
