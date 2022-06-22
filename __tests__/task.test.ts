@@ -1,5 +1,5 @@
 import { Priority, Status } from '@prisma/client';
-import { TaskInput } from './../src/graphql/types.d';
+import { TaskInput } from '../src/graphql/types.d';
 import { Context, createMockContext, MockContext } from './context';
 
 let mockCtx: MockContext;

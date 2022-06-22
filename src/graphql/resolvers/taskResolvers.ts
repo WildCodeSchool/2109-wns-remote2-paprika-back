@@ -13,7 +13,7 @@ export default {
       });
       return tasks;
     },
-    getTask: async (_: any, { taskId }: { taskId: string }) => {
+    getTask: async (_: undefined, { taskId }: { taskId: string }) => {
       const task = await prisma.task.findUnique({
         where: {
           id: taskId
@@ -24,10 +24,13 @@ export default {
       });
       return task;
     },
-    getTaskByProject: async (_: any, { projectId }: { projectId: string }) => {
+    getTaskByProject: async (
+      _: undefined,
+      { projectId }: { projectId: string }
+    ) => {
       const tasks = await prisma.task.findMany({
         where: {
-          projectId: projectId
+          projectId
         },
         include: {
           users: true
@@ -38,7 +41,10 @@ export default {
   },
 
   Mutation: {
-    createTask: async (_: any, { taskInput }: { taskInput: TaskInput }) => {
+    createTask: async (
+      _: undefined,
+      { taskInput }: { taskInput: TaskInput }
+    ) => {
       const idUser: Array<{ id: string }> = taskInput.users.map((userID) => ({
         id: userID
       }));
@@ -55,7 +61,7 @@ export default {
       });
       return task;
     },
-    deleteTask: async (_: any, { taskId }: { taskId: string }) => {
+    deleteTask: async (_: undefined, { taskId }: { taskId: string }) => {
       const deletedTask = await prisma.task.delete({
         where: {
           id: taskId
@@ -64,7 +70,7 @@ export default {
       return deletedTask;
     },
     updateTask: async (
-      _: any,
+      _: undefined,
       { updateTaskInput }: { updateTaskInput: UpdateTaskInput }
     ) => {
       const idUsers: Array<{ id: string }> = updateTaskInput.users.map(
@@ -85,7 +91,7 @@ export default {
         }
       });
 
-      /**Verify if the new users'list has new users, if so it adds them to the current list*/
+      /** Verify if the new users'list has new users, if so it adds them to the current list */
       idUsers.forEach((idUser) => {
         if (task?.users) {
           const currentUsers = JSON.stringify(task.users);
@@ -95,8 +101,8 @@ export default {
         }
       });
 
-      /**Verify if the new users'list has missing users compare to the current list,
-       * if so it deletes them from the current list*/
+      /** Verify if the new users'list has missing users compare to the current list,
+       * if so it deletes them from the current list */
       task?.users.forEach((user) => {
         if (idUsers) {
           const newUsers = JSON.stringify(idUsers);

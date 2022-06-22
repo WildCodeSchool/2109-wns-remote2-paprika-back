@@ -1,13 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+
 const prisma = new PrismaClient();
 
-const getUser = async (authorization: any) => {
+const getUser = async (authorization: string) => {
   const bearerLength = 'Bearer '.length;
   if (authorization && authorization.length > bearerLength) {
     const token = authorization.slice(bearerLength);
     const { ok, result } = await new Promise((resolve) =>
-      jwt.verify(token, 'secretKey', (err: any, result: any) => {
+      jwt.verify(token, 'secretKey', (err, results) => {
         if (err) {
           resolve({
             ok: false,
@@ -16,7 +17,7 @@ const getUser = async (authorization: any) => {
         } else {
           resolve({
             ok: true,
-            result
+            result: results
           });
         }
       })
@@ -29,10 +30,9 @@ const getUser = async (authorization: any) => {
         }
       });
       return user;
-    } else {
-      console.error(result);
-      return null;
     }
+    console.error(result);
+    return null;
   }
 
   return null;
