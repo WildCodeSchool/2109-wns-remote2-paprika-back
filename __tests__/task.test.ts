@@ -1,6 +1,6 @@
 import { Priority, Status } from '@prisma/client';
-import { Context, createMockContext, MockContext } from './context';
 import { TaskInput } from './../src/graphql/types.d';
+import { Context, createMockContext, MockContext } from './context';
 
 let mockCtx: MockContext;
 let ctx: Context;
@@ -22,7 +22,8 @@ test('should create new task ', async () => {
     projectId: '08e10906-c1e1-4919-ba81-4e9d8847da3d',
     timing: null,
     status: Status.OPEN,
-    priority: Priority.LOW
+    priority: Priority.LOW,
+    users: []
   };
 
   mockCtx.prisma.task.create.mockResolvedValue(taskInput);
@@ -34,6 +35,7 @@ test('should create new task ', async () => {
     projectId: '08e10906-c1e1-4919-ba81-4e9d8847da3d',
     timing: null,
     status: 'OPEN',
-    priority: 'LOW'
+    priority: 'LOW',
+    users: []
   });
 });
