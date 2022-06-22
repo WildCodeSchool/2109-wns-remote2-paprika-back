@@ -10,6 +10,7 @@
     "start": "npx prisma migrate dev && tsc && nodemon -L ./src/app.ts",
     "test": "jest -i",
     "lint": "eslint . --ext .ts",
+    "compile": "tsc",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "db:migration": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
