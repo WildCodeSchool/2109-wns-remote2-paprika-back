@@ -11,6 +11,7 @@ const runServer = () => {
   const prisma = new PrismaClient();
   const server = new ApolloServer({
     cors: {
+      origin: '*',
       credentials: true
     },
     resolvers,
