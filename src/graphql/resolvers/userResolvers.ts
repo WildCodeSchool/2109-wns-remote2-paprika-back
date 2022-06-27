@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 import {
   UpdateUserInput,
@@ -14,7 +15,8 @@ export default {
   Mutation: {
     register: async (
       _: undefined,
-      { userCreateInput }: { userCreateInput: UserCreateInput }
+      { userCreateInput }: { userCreateInput: UserCreateInput },
+      ctx: { user: User; prisma: PrismaClient; res: Response }
     ) => {
       const newUser = await prisma.user.create({
         data: {
@@ -25,11 +27,20 @@ export default {
           role: userCreateInput.role || undefined
         }
       });
-      return { token: jwt.sign(newUser, 'secretKey'), user: newUser };
+
+      const token = jwt.sign(newUser, 'secretKey');
+      ctx.res.cookie('token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      });
+
+      return { token, user: newUser };
     },
     login: async (
       _: undefined,
-      { userLoginInput }: { userLoginInput: UserLoginInput }
+      { userLoginInput }: { userLoginInput: UserLoginInput },
+      ctx: { user: User; prisma: PrismaClient; res: Response }
     ) => {
       const loggedUser = await prisma.user.findUnique({
         where: {
@@ -42,7 +53,15 @@ export default {
         loggedUser.password
       );
       if (!isMatch) throw new Error('Unable to Login');
-      return { token: jwt.sign(loggedUser, 'secretKey'), user: loggedUser };
+
+      const token = jwt.sign(loggedUser, 'secretKey');
+      ctx.res.cookie('token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      });
+
+      return { token, user: loggedUser };
     },
     deleteUser: async (_: undefined, { userId }: { userId: string }) => {
       const deletedUser = await prisma.user.delete({
@@ -55,7 +74,7 @@ export default {
     updateUser: async (
       _: undefined,
       { updateUserInput }: { updateUserInput: UpdateUserInput },
-      ctx: { user: User; prisma: PrismaClient }
+      ctx: { user: User; prisma: PrismaClient; res: Response }
     ) => {
       const updatedUser = await prisma.user.update({
         where: {
