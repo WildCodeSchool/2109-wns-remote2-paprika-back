@@ -57,7 +57,7 @@ export default {
       const token = jwt.sign(loggedUser, 'secretKey');
       ctx.res.cookie('token', token, {
         httpOnly: true,
-        secure: true,
+        secure: false, // TODO set to ```true``` on production
         sameSite: 'none'
       });
 
