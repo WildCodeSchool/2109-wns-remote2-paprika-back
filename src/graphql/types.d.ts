@@ -307,7 +307,7 @@ export type UpdateUserInput = {
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleSite>;
-  userId: Scalars['String'];
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {

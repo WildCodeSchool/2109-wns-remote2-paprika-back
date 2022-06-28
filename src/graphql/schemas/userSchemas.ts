@@ -43,7 +43,7 @@ export default gql`
   }
 
   input UpdateUserInput {
-    userId: String!
+    userId: String
     lastName: String
     firstName: String
     role: RoleSite
