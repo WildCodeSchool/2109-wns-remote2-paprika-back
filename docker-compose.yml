@@ -15,7 +15,7 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./src/:/paprika-back-staging/src/
+      - ./src/:/paprika-back/src/
     restart: always
     links:
       - mysqldb

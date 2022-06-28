@@ -84,12 +84,11 @@ export default {
     },
     updateUser: async (
       _: undefined,
-      { updateUserInput }: { updateUserInput: UpdateUserInput },
-      ctx: { user: User; prisma: PrismaClient; res: Response }
+      { updateUserInput }: { updateUserInput: UpdateUserInput }
     ) => {
       const updatedUser = await prisma.user.update({
         where: {
-          id: ctx !== null ? ctx.user.id : updateUserInput.userId
+          id: updateUserInput.userId
         },
         data: {
           firstName: updateUserInput.firstName || undefined,
