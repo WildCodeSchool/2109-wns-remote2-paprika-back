@@ -30,9 +30,9 @@ export default {
 
       const token = jwt.sign(newUser, 'secretKey');
       ctx.res.cookie('token', token, {
-        httpOnly: true,
+        sameSite: 'none',
         secure: true,
-        sameSite: 'none'
+        httpOnly: true
       });
 
       return { token, user: newUser };
@@ -55,14 +55,25 @@ export default {
       if (!isMatch) throw new Error('Unable to Login');
 
       const token = jwt.sign(loggedUser, 'secretKey');
-      ctx.res.cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none'
-      });
 
+      ctx.res.cookie('token', token, {
+        sameSite: 'none',
+        secure: true,
+        httpOnly: true
+      });
       return { token, user: loggedUser };
     },
+
+    logout: async (
+      _: undefined,
+      _args: undefined,
+      ctx: { user: User; prisma: PrismaClient; res: Response }
+    ) => {
+      ctx.res.clearCookie('token');
+
+      return true;
+    },
+
     deleteUser: async (_: undefined, { userId }: { userId: string }) => {
       const deletedUser = await prisma.user.delete({
         where: {

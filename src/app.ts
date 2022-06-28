@@ -11,15 +11,19 @@ const runServer = () => {
   const prisma = new PrismaClient();
   const server = new ApolloServer({
     cors: {
-      origin: '*',
+      origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
       credentials: true
     },
     resolvers,
     typeDefs,
     context: async ({ req, res }) => {
+      const token = req.headers.cookie?.split('=');
       let user = null;
-      if (req.headers.authorization?.includes('Bearer'))
+      if (req.headers.authorization?.includes('Bearer')) {
         user = await getUser(req.headers.authorization);
+      } else if (token && token[0] === 'token') {
+        user = await getUser(`Bearer ${token[1]}`);
+      }
       return {
         prisma,
         user,

@@ -10,6 +10,7 @@ export default gql`
   type Mutation {
     register(userCreateInput: UserCreateInput!): AuthPayLoad!
     login(userLoginInput: UserLoginInput!): AuthPayLoad!
+    logout: Boolean
     deleteUser(userId: String!): Boolean
     updateUser(updateUserInput: UpdateUserInput!): User!
   }
