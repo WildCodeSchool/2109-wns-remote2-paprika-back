@@ -30,9 +30,9 @@ export default {
 
       const token = jwt.sign(newUser, 'secretKey');
       ctx.res.cookie('token', token, {
-        httpOnly: true,
+        sameSite: 'none',
         secure: true,
-        sameSite: 'none'
+        httpOnly: true
       });
 
       return { token, user: newUser };
@@ -55,10 +55,11 @@ export default {
       if (!isMatch) throw new Error('Unable to Login');
 
       const token = jwt.sign(loggedUser, 'secretKey');
+
       ctx.res.cookie('token', token, {
-        httpOnly: true,
+        sameSite: 'none',
         secure: true,
-        sameSite: 'none'
+        httpOnly: true
       });
 
       return { token, user: loggedUser };
